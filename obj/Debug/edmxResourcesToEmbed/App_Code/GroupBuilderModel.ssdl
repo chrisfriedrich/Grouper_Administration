@@ -1,0 +1,588 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="GrouperDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="__MigrationHistory">
+    <Key>
+      <PropertyRef Name="MigrationId" />
+      <PropertyRef Name="ContextKey" />
+    </Key>
+    <Property Name="MigrationId" Type="nvarchar" MaxLength="150" Nullable="false" />
+    <Property Name="ContextKey" Type="nvarchar" MaxLength="300" Nullable="false" />
+    <Property Name="Model" Type="varbinary(max)" Nullable="false" />
+    <Property Name="ProductVersion" Type="nvarchar" MaxLength="32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="AspNetRoles">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="256" Nullable="false" />
+  </EntityType>
+  <EntityType Name="AspNetUserClaims">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="ClaimType" Type="nvarchar(max)" />
+    <Property Name="ClaimValue" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="AspNetUserLogins">
+    <Key>
+      <PropertyRef Name="LoginProvider" />
+      <PropertyRef Name="ProviderKey" />
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="LoginProvider" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="ProviderKey" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+  </EntityType>
+  <EntityType Name="AspNetUserRoles">
+    <Key>
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="RoleId" />
+    </Key>
+    <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="RoleId" Type="nvarchar" MaxLength="128" Nullable="false" />
+  </EntityType>
+  <EntityType Name="AspNetUsers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="Email" Type="nvarchar" MaxLength="256" />
+    <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+    <Property Name="PasswordHash" Type="nvarchar(max)" />
+    <Property Name="SecurityStamp" Type="nvarchar(max)" />
+    <Property Name="PhoneNumber" Type="nvarchar(max)" />
+    <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+    <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+    <Property Name="LockoutEndDateUtc" Type="datetime" />
+    <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+    <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+    <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Courses">
+    <Key>
+      <PropertyRef Name="CourseID" />
+    </Key>
+    <Property Name="CourseID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Code" Type="nvarchar" MaxLength="12" />
+    <Property Name="Name" Type="nvarchar" MaxLength="250" />
+    <Property Name="CoreCourseFlag" Type="bit" />
+  </EntityType>
+  <EntityType Name="Groups">
+    <Key>
+      <PropertyRef Name="GroupID" />
+    </Key>
+    <Property Name="GroupID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CourseSectionID" Type="int" />
+    <Property Name="GroupNumber" Type="int" />
+    <Property Name="Name" Type="nvarchar" MaxLength="500" />
+    <Property Name="Notes" Type="nvarchar(max)" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'GrouperDB.dbo.GroupStudents' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="GroupStudents">
+    <Key>
+      <PropertyRef Name="GroupID" />
+    </Key>
+    <Property Name="GroupID" Type="int" Nullable="false" />
+    <Property Name="StudentID" Type="int" />
+    <Property Name="Project1RoleID" Type="int" />
+    <Property Name="Project2RoleID" Type="int" />
+  </EntityType>
+  <EntityType Name="Instructors">
+    <Key>
+      <PropertyRef Name="InstructorID" />
+    </Key>
+    <Property Name="InstructorID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DuckID" Type="nvarchar" MaxLength="15" />
+    <Property Name="FirstName" Type="nvarchar" MaxLength="80" />
+    <Property Name="LastName" Type="nvarchar" MaxLength="80" />
+  </EntityType>
+  <EntityType Name="Instructors_CourseSections">
+    <Key>
+      <PropertyRef Name="InstructorCourseID" />
+    </Key>
+    <Property Name="InstructorCourseID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="InstructorID" Type="int" Nullable="false" />
+    <Property Name="CourseID" Type="int" Nullable="false" />
+    <Property Name="TermNumber" Type="int" />
+    <Property Name="TermName" Type="nvarchar" MaxLength="25" />
+    <Property Name="Year" Type="int" />
+  </EntityType>
+  <EntityType Name="ProgrammingLanguages">
+    <Key>
+      <PropertyRef Name="LanguageID" />
+    </Key>
+    <Property Name="LanguageID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="Roles">
+    <Key>
+      <PropertyRef Name="RoleID" />
+    </Key>
+    <Property Name="RoleID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="80" />
+  </EntityType>
+  <EntityType Name="Skills">
+    <Key>
+      <PropertyRef Name="SkillID" />
+    </Key>
+    <Property Name="SkillID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="150" />
+  </EntityType>
+  <EntityType Name="Students">
+    <Key>
+      <PropertyRef Name="StudentID" />
+    </Key>
+    <Property Name="StudentID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="InstructorCourseID" Type="int" />
+    <Property Name="FirstName" Type="nvarchar" MaxLength="80" />
+    <Property Name="LastName" Type="nvarchar" MaxLength="80" />
+    <Property Name="PreferredName" Type="nvarchar" MaxLength="80" />
+    <Property Name="UOID" Type="int" />
+    <Property Name="DuckID" Type="nvarchar" MaxLength="15" />
+    <Property Name="OutgoingLevel" Type="int" />
+    <Property Name="DevelopmentExperience" Type="nvarchar" MaxLength="700" />
+    <Property Name="LearningExpectations" Type="nvarchar" MaxLength="700" />
+    <Property Name="ContributingRole" Type="nvarchar" MaxLength="500" />
+    <Property Name="OtherProgrammingLanguage" Type="nvarchar" MaxLength="50" />
+    <Property Name="OtherProgrammingLanguageProficiency" Type="int" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'GrouperDB.dbo.Students_CoursesCompleted' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="Students_CoursesCompleted">
+    <Key>
+      <PropertyRef Name="StudentID" />
+    </Key>
+    <Property Name="StudentID" Type="int" Nullable="false" />
+    <Property Name="CourseID" Type="int" />
+    <Property Name="Grade" Type="decimal" Precision="3" Scale="2" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'GrouperDB.dbo.Students_EnrolledCourses' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="Students_EnrolledCourses">
+    <Key>
+      <PropertyRef Name="StudentID" />
+    </Key>
+    <Property Name="StudentID" Type="int" Nullable="false" />
+    <Property Name="EnrolledCourseCode" Type="nvarchar" MaxLength="11" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'GrouperDB.dbo.Students_ProgrammingLanguages' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="Students_ProgrammingLanguages">
+    <Key>
+      <PropertyRef Name="StudentID" />
+    </Key>
+    <Property Name="StudentID" Type="int" Nullable="false" />
+    <Property Name="LanguageID" Type="int" />
+    <Property Name="ProficiencyRank" Type="int" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'GrouperDB.dbo.Students_RoleInterests' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="Students_RoleInterests">
+    <Key>
+      <PropertyRef Name="StudentID" />
+    </Key>
+    <Property Name="StudentID" Type="int" Nullable="false" />
+    <Property Name="RoleID" Type="int" />
+    <Property Name="InterestLevel" Type="int" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'GrouperDB.dbo.Students_Skills' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="Students_Skills">
+    <Key>
+      <PropertyRef Name="StudentID" />
+    </Key>
+    <Property Name="StudentID" Type="int" Nullable="false" />
+    <Property Name="SkillID" Type="int" />
+    <Property Name="ProficiencyLevel" Type="int" />
+  </EntityType>
+  <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+    <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="AspNetUserClaims" Type="Self.AspNetUserClaims" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AspNetUsers">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="AspNetUserClaims">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+    <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="AspNetUserLogins" Type="Self.AspNetUserLogins" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AspNetUsers">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="AspNetUserLogins">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId">
+    <End Role="AspNetRoles" Type="Self.AspNetRoles" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AspNetRoles">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="AspNetUserRoles">
+        <PropertyRef Name="RoleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
+    <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AspNetUsers">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="AspNetUserRoles">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Groups_InstructorCourseSections">
+    <End Role="Instructors_CourseSections" Type="Self.Instructors_CourseSections" Multiplicity="0..1" />
+    <End Role="Groups" Type="Self.Groups" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Instructors_CourseSections">
+        <PropertyRef Name="InstructorCourseID" />
+      </Principal>
+      <Dependent Role="Groups">
+        <PropertyRef Name="CourseSectionID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GroupStudents_Groups">
+    <End Role="Groups" Type="Self.Groups" Multiplicity="1" />
+    <End Role="GroupStudents" Type="Self.GroupStudents" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Groups">
+        <PropertyRef Name="GroupID" />
+      </Principal>
+      <Dependent Role="GroupStudents">
+        <PropertyRef Name="GroupID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GroupStudents_Roles">
+    <End Role="Roles" Type="Self.Roles" Multiplicity="0..1" />
+    <End Role="GroupStudents" Type="Self.GroupStudents" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Roles">
+        <PropertyRef Name="RoleID" />
+      </Principal>
+      <Dependent Role="GroupStudents">
+        <PropertyRef Name="Project1RoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GroupStudents_Roles1">
+    <End Role="Roles" Type="Self.Roles" Multiplicity="0..1" />
+    <End Role="GroupStudents" Type="Self.GroupStudents" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Roles">
+        <PropertyRef Name="RoleID" />
+      </Principal>
+      <Dependent Role="GroupStudents">
+        <PropertyRef Name="Project2RoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GroupStudents_Students">
+    <End Role="Students" Type="Self.Students" Multiplicity="0..1" />
+    <End Role="GroupStudents" Type="Self.GroupStudents" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Students">
+        <PropertyRef Name="StudentID" />
+      </Principal>
+      <Dependent Role="GroupStudents">
+        <PropertyRef Name="StudentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_InstructorCourseSections_Courses">
+    <End Role="Courses" Type="Self.Courses" Multiplicity="1" />
+    <End Role="Instructors_CourseSections" Type="Self.Instructors_CourseSections" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Courses">
+        <PropertyRef Name="CourseID" />
+      </Principal>
+      <Dependent Role="Instructors_CourseSections">
+        <PropertyRef Name="CourseID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_InstructorCourseSections_Instructors">
+    <End Role="Instructors" Type="Self.Instructors" Multiplicity="1" />
+    <End Role="Instructors_CourseSections" Type="Self.Instructors_CourseSections" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Instructors">
+        <PropertyRef Name="InstructorID" />
+      </Principal>
+      <Dependent Role="Instructors_CourseSections">
+        <PropertyRef Name="InstructorID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Students_CoursesCompleted_Courses">
+    <End Role="Courses" Type="Self.Courses" Multiplicity="0..1" />
+    <End Role="Students_CoursesCompleted" Type="Self.Students_CoursesCompleted" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Courses">
+        <PropertyRef Name="CourseID" />
+      </Principal>
+      <Dependent Role="Students_CoursesCompleted">
+        <PropertyRef Name="CourseID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Students_CoursesCompleted_Students">
+    <End Role="Students" Type="Self.Students" Multiplicity="1" />
+    <End Role="Students_CoursesCompleted" Type="Self.Students_CoursesCompleted" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Students">
+        <PropertyRef Name="StudentID" />
+      </Principal>
+      <Dependent Role="Students_CoursesCompleted">
+        <PropertyRef Name="StudentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Students_EnrolledCourses_Students">
+    <End Role="Students" Type="Self.Students" Multiplicity="1" />
+    <End Role="Students_EnrolledCourses" Type="Self.Students_EnrolledCourses" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Students">
+        <PropertyRef Name="StudentID" />
+      </Principal>
+      <Dependent Role="Students_EnrolledCourses">
+        <PropertyRef Name="StudentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Students_ProgrammingLanguages_ProgrammingLanguages">
+    <End Role="ProgrammingLanguages" Type="Self.ProgrammingLanguages" Multiplicity="0..1" />
+    <End Role="Students_ProgrammingLanguages" Type="Self.Students_ProgrammingLanguages" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProgrammingLanguages">
+        <PropertyRef Name="LanguageID" />
+      </Principal>
+      <Dependent Role="Students_ProgrammingLanguages">
+        <PropertyRef Name="LanguageID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Students_ProgrammingLanguages_Students">
+    <End Role="Students" Type="Self.Students" Multiplicity="1" />
+    <End Role="Students_ProgrammingLanguages" Type="Self.Students_ProgrammingLanguages" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Students">
+        <PropertyRef Name="StudentID" />
+      </Principal>
+      <Dependent Role="Students_ProgrammingLanguages">
+        <PropertyRef Name="StudentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Students_RoleInterests_Roles">
+    <End Role="Roles" Type="Self.Roles" Multiplicity="0..1" />
+    <End Role="Students_RoleInterests" Type="Self.Students_RoleInterests" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Roles">
+        <PropertyRef Name="RoleID" />
+      </Principal>
+      <Dependent Role="Students_RoleInterests">
+        <PropertyRef Name="RoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Students_RoleInterests_Students">
+    <End Role="Students" Type="Self.Students" Multiplicity="0..1" />
+    <End Role="Students_RoleInterests" Type="Self.Students_RoleInterests" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Students">
+        <PropertyRef Name="StudentID" />
+      </Principal>
+      <Dependent Role="Students_RoleInterests">
+        <PropertyRef Name="RoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Students_Skills_Skills">
+    <End Role="Skills" Type="Self.Skills" Multiplicity="0..1" />
+    <End Role="Students_Skills" Type="Self.Students_Skills" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Skills">
+        <PropertyRef Name="SkillID" />
+      </Principal>
+      <Dependent Role="Students_Skills">
+        <PropertyRef Name="SkillID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Students_Skills_Students">
+    <End Role="Students" Type="Self.Students" Multiplicity="1" />
+    <End Role="Students_Skills" Type="Self.Students_Skills" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Students">
+        <PropertyRef Name="StudentID" />
+      </Principal>
+      <Dependent Role="Students_Skills">
+        <PropertyRef Name="StudentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="GrouperDBModelStoreContainer">
+    <EntitySet Name="__MigrationHistory" EntityType="Self.__MigrationHistory" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Courses" EntityType="Self.Courses" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Groups" EntityType="Self.Groups" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Instructors" EntityType="Self.Instructors" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Instructors_CourseSections" EntityType="Self.Instructors_CourseSections" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ProgrammingLanguages" EntityType="Self.ProgrammingLanguages" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Skills" EntityType="Self.Skills" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Students" EntityType="Self.Students" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="GroupStudents" EntityType="Self.GroupStudents" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [GroupStudents].[GroupID] AS [GroupID], 
+    [GroupStudents].[StudentID] AS [StudentID], 
+    [GroupStudents].[Project1RoleID] AS [Project1RoleID], 
+    [GroupStudents].[Project2RoleID] AS [Project2RoleID]
+    FROM [dbo].[GroupStudents] AS [GroupStudents]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="Students_CoursesCompleted" EntityType="Self.Students_CoursesCompleted" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [Students_CoursesCompleted].[StudentID] AS [StudentID], 
+    [Students_CoursesCompleted].[CourseID] AS [CourseID], 
+    [Students_CoursesCompleted].[Grade] AS [Grade]
+    FROM [dbo].[Students_CoursesCompleted] AS [Students_CoursesCompleted]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="Students_EnrolledCourses" EntityType="Self.Students_EnrolledCourses" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [Students_EnrolledCourses].[StudentID] AS [StudentID], 
+    [Students_EnrolledCourses].[EnrolledCourseCode] AS [EnrolledCourseCode]
+    FROM [dbo].[Students_EnrolledCourses] AS [Students_EnrolledCourses]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="Students_ProgrammingLanguages" EntityType="Self.Students_ProgrammingLanguages" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [Students_ProgrammingLanguages].[StudentID] AS [StudentID], 
+    [Students_ProgrammingLanguages].[LanguageID] AS [LanguageID], 
+    [Students_ProgrammingLanguages].[ProficiencyRank] AS [ProficiencyRank]
+    FROM [dbo].[Students_ProgrammingLanguages] AS [Students_ProgrammingLanguages]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="Students_RoleInterests" EntityType="Self.Students_RoleInterests" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [Students_RoleInterests].[StudentID] AS [StudentID], 
+    [Students_RoleInterests].[RoleID] AS [RoleID], 
+    [Students_RoleInterests].[InterestLevel] AS [InterestLevel]
+    FROM [dbo].[Students_RoleInterests] AS [Students_RoleInterests]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="Students_Skills" EntityType="Self.Students_Skills" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [Students_Skills].[StudentID] AS [StudentID], 
+    [Students_Skills].[SkillID] AS [SkillID], 
+    [Students_Skills].[ProficiencyLevel] AS [ProficiencyLevel]
+    FROM [dbo].[Students_Skills] AS [Students_Skills]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+      <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+      <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+      <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+      <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId">
+      <End Role="AspNetRoles" EntitySet="AspNetRoles" />
+      <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
+      <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+      <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Groups_InstructorCourseSections" Association="Self.FK_Groups_InstructorCourseSections">
+      <End Role="Instructors_CourseSections" EntitySet="Instructors_CourseSections" />
+      <End Role="Groups" EntitySet="Groups" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GroupStudents_Groups" Association="Self.FK_GroupStudents_Groups">
+      <End Role="Groups" EntitySet="Groups" />
+      <End Role="GroupStudents" EntitySet="GroupStudents" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GroupStudents_Roles" Association="Self.FK_GroupStudents_Roles">
+      <End Role="Roles" EntitySet="Roles" />
+      <End Role="GroupStudents" EntitySet="GroupStudents" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GroupStudents_Roles1" Association="Self.FK_GroupStudents_Roles1">
+      <End Role="Roles" EntitySet="Roles" />
+      <End Role="GroupStudents" EntitySet="GroupStudents" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GroupStudents_Students" Association="Self.FK_GroupStudents_Students">
+      <End Role="Students" EntitySet="Students" />
+      <End Role="GroupStudents" EntitySet="GroupStudents" />
+    </AssociationSet>
+    <AssociationSet Name="FK_InstructorCourseSections_Courses" Association="Self.FK_InstructorCourseSections_Courses">
+      <End Role="Courses" EntitySet="Courses" />
+      <End Role="Instructors_CourseSections" EntitySet="Instructors_CourseSections" />
+    </AssociationSet>
+    <AssociationSet Name="FK_InstructorCourseSections_Instructors" Association="Self.FK_InstructorCourseSections_Instructors">
+      <End Role="Instructors" EntitySet="Instructors" />
+      <End Role="Instructors_CourseSections" EntitySet="Instructors_CourseSections" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Students_CoursesCompleted_Courses" Association="Self.FK_Students_CoursesCompleted_Courses">
+      <End Role="Courses" EntitySet="Courses" />
+      <End Role="Students_CoursesCompleted" EntitySet="Students_CoursesCompleted" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Students_CoursesCompleted_Students" Association="Self.FK_Students_CoursesCompleted_Students">
+      <End Role="Students" EntitySet="Students" />
+      <End Role="Students_CoursesCompleted" EntitySet="Students_CoursesCompleted" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Students_EnrolledCourses_Students" Association="Self.FK_Students_EnrolledCourses_Students">
+      <End Role="Students" EntitySet="Students" />
+      <End Role="Students_EnrolledCourses" EntitySet="Students_EnrolledCourses" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Students_ProgrammingLanguages_ProgrammingLanguages" Association="Self.FK_Students_ProgrammingLanguages_ProgrammingLanguages">
+      <End Role="ProgrammingLanguages" EntitySet="ProgrammingLanguages" />
+      <End Role="Students_ProgrammingLanguages" EntitySet="Students_ProgrammingLanguages" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Students_ProgrammingLanguages_Students" Association="Self.FK_Students_ProgrammingLanguages_Students">
+      <End Role="Students" EntitySet="Students" />
+      <End Role="Students_ProgrammingLanguages" EntitySet="Students_ProgrammingLanguages" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Students_RoleInterests_Roles" Association="Self.FK_Students_RoleInterests_Roles">
+      <End Role="Roles" EntitySet="Roles" />
+      <End Role="Students_RoleInterests" EntitySet="Students_RoleInterests" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Students_RoleInterests_Students" Association="Self.FK_Students_RoleInterests_Students">
+      <End Role="Students" EntitySet="Students" />
+      <End Role="Students_RoleInterests" EntitySet="Students_RoleInterests" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Students_Skills_Skills" Association="Self.FK_Students_Skills_Skills">
+      <End Role="Skills" EntitySet="Skills" />
+      <End Role="Students_Skills" EntitySet="Students_Skills" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Students_Skills_Students" Association="Self.FK_Students_Skills_Students">
+      <End Role="Students" EntitySet="Students" />
+      <End Role="Students_Skills" EntitySet="Students_Skills" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

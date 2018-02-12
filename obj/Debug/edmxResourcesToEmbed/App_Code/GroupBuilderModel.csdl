@@ -1,0 +1,541 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="GrouperDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="C__MigrationHistory">
+    <Key>
+      <PropertyRef Name="MigrationId" />
+      <PropertyRef Name="ContextKey" />
+    </Key>
+    <Property Name="MigrationId" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ContextKey" Type="String" MaxLength="300" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Model" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+    <Property Name="ProductVersion" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+  </EntityType>
+  <EntityType Name="AspNetRole">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="AspNetUsers" Relationship="Self.AspNetUserRoles" FromRole="AspNetRoles" ToRole="AspNetUsers" />
+  </EntityType>
+  <EntityType Name="AspNetUserClaim">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="AspNetUser" Relationship="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUserClaims" ToRole="AspNetUsers" />
+  </EntityType>
+  <EntityType Name="AspNetUserLogin">
+    <Key>
+      <PropertyRef Name="LoginProvider" />
+      <PropertyRef Name="ProviderKey" />
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="LoginProvider" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ProviderKey" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="AspNetUser" Relationship="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUserLogins" ToRole="AspNetUsers" />
+  </EntityType>
+  <EntityType Name="AspNetUser">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+    <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+    <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+    <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+    <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+    <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+    <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+    <Property Name="UserName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="AspNetUserClaims" Relationship="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserClaims" />
+    <NavigationProperty Name="AspNetUserLogins" Relationship="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
+    <NavigationProperty Name="AspNetRoles" Relationship="Self.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
+  </EntityType>
+  <EntityType Name="Cours">
+    <Key>
+      <PropertyRef Name="CourseID" />
+    </Key>
+    <Property Name="CourseID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
+    <Property Name="Name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="CoreCourseFlag" Type="Boolean" />
+    <NavigationProperty Name="Instructors_CourseSections" Relationship="Self.FK_InstructorCourseSections_Courses" FromRole="Courses" ToRole="Instructors_CourseSections" />
+    <NavigationProperty Name="Students_CoursesCompleted" Relationship="Self.FK_Students_CoursesCompleted_Courses" FromRole="Courses" ToRole="Students_CoursesCompleted" />
+  </EntityType>
+  <EntityType Name="Group">
+    <Key>
+      <PropertyRef Name="GroupID" />
+    </Key>
+    <Property Name="GroupID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CourseSectionID" Type="Int32" />
+    <Property Name="GroupNumber" Type="Int32" />
+    <Property Name="Name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Instructors_CourseSections" Relationship="Self.FK_Groups_InstructorCourseSections" FromRole="Groups" ToRole="Instructors_CourseSections" />
+    <NavigationProperty Name="GroupStudent" Relationship="Self.FK_GroupStudents_Groups" FromRole="Groups" ToRole="GroupStudents" />
+  </EntityType>
+  <EntityType Name="Instructor">
+    <Key>
+      <PropertyRef Name="InstructorID" />
+    </Key>
+    <Property Name="InstructorID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DuckID" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+    <Property Name="FirstName" Type="String" MaxLength="80" FixedLength="false" Unicode="true" />
+    <Property Name="LastName" Type="String" MaxLength="80" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Instructors_CourseSections" Relationship="Self.FK_InstructorCourseSections_Instructors" FromRole="Instructors" ToRole="Instructors_CourseSections" />
+  </EntityType>
+  <EntityType Name="Instructors_CourseSections">
+    <Key>
+      <PropertyRef Name="InstructorCourseID" />
+    </Key>
+    <Property Name="InstructorCourseID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="InstructorID" Type="Int32" Nullable="false" />
+    <Property Name="CourseID" Type="Int32" Nullable="false" />
+    <Property Name="TermNumber" Type="Int32" />
+    <Property Name="TermName" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+    <Property Name="Year" Type="Int32" />
+    <NavigationProperty Name="Cours" Relationship="Self.FK_InstructorCourseSections_Courses" FromRole="Instructors_CourseSections" ToRole="Courses" />
+    <NavigationProperty Name="Groups" Relationship="Self.FK_Groups_InstructorCourseSections" FromRole="Instructors_CourseSections" ToRole="Groups" />
+    <NavigationProperty Name="Instructor" Relationship="Self.FK_InstructorCourseSections_Instructors" FromRole="Instructors_CourseSections" ToRole="Instructors" />
+  </EntityType>
+  <EntityType Name="ProgrammingLanguage">
+    <Key>
+      <PropertyRef Name="LanguageID" />
+    </Key>
+    <Property Name="LanguageID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Students_ProgrammingLanguages" Relationship="Self.FK_Students_ProgrammingLanguages_ProgrammingLanguages" FromRole="ProgrammingLanguages" ToRole="Students_ProgrammingLanguages" />
+  </EntityType>
+  <EntityType Name="Role">
+    <Key>
+      <PropertyRef Name="RoleID" />
+    </Key>
+    <Property Name="RoleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="80" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="GroupStudents" Relationship="Self.FK_GroupStudents_Roles" FromRole="Roles" ToRole="GroupStudents" />
+    <NavigationProperty Name="GroupStudents1" Relationship="Self.FK_GroupStudents_Roles1" FromRole="Roles" ToRole="GroupStudents" />
+    <NavigationProperty Name="Students_RoleInterests" Relationship="Self.FK_Students_RoleInterests_Roles" FromRole="Roles" ToRole="Students_RoleInterests" />
+  </EntityType>
+  <EntityType Name="Skill">
+    <Key>
+      <PropertyRef Name="SkillID" />
+    </Key>
+    <Property Name="SkillID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Students_Skills" Relationship="Self.FK_Students_Skills_Skills" FromRole="Skills" ToRole="Students_Skills" />
+  </EntityType>
+  <EntityType Name="Student">
+    <Key>
+      <PropertyRef Name="StudentID" />
+    </Key>
+    <Property Name="StudentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="InstructorCourseID" Type="Int32" />
+    <Property Name="FirstName" Type="String" MaxLength="80" FixedLength="false" Unicode="true" />
+    <Property Name="LastName" Type="String" MaxLength="80" FixedLength="false" Unicode="true" />
+    <Property Name="PreferredName" Type="String" MaxLength="80" FixedLength="false" Unicode="true" />
+    <Property Name="UOID" Type="Int32" />
+    <Property Name="DuckID" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+    <Property Name="OutgoingLevel" Type="Int32" />
+    <Property Name="DevelopmentExperience" Type="String" MaxLength="700" FixedLength="false" Unicode="true" />
+    <Property Name="LearningExpectations" Type="String" MaxLength="700" FixedLength="false" Unicode="true" />
+    <Property Name="ContributingRole" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="OtherProgrammingLanguage" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="OtherProgrammingLanguageProficiency" Type="Int32" />
+    <NavigationProperty Name="GroupStudents" Relationship="Self.FK_GroupStudents_Students" FromRole="Students" ToRole="GroupStudents" />
+    <NavigationProperty Name="Students_CoursesCompleted" Relationship="Self.FK_Students_CoursesCompleted_Students" FromRole="Students" ToRole="Students_CoursesCompleted" />
+    <NavigationProperty Name="Students_EnrolledCourses" Relationship="Self.FK_Students_EnrolledCourses_Students" FromRole="Students" ToRole="Students_EnrolledCourses" />
+    <NavigationProperty Name="Students_ProgrammingLanguages" Relationship="Self.FK_Students_ProgrammingLanguages_Students" FromRole="Students" ToRole="Students_ProgrammingLanguages" />
+    <NavigationProperty Name="Students_RoleInterests" Relationship="Self.FK_Students_RoleInterests_Students" FromRole="Students" ToRole="Students_RoleInterests" />
+    <NavigationProperty Name="Students_Skills" Relationship="Self.FK_Students_Skills_Students" FromRole="Students" ToRole="Students_Skills" />
+  </EntityType>
+  <EntityType Name="GroupStudent">
+    <Key>
+      <PropertyRef Name="GroupID" />
+    </Key>
+    <Property Name="GroupID" Type="Int32" Nullable="false" />
+    <Property Name="StudentID" Type="Int32" />
+    <Property Name="Project1RoleID" Type="Int32" />
+    <Property Name="Project2RoleID" Type="Int32" />
+    <NavigationProperty Name="Group" Relationship="Self.FK_GroupStudents_Groups" FromRole="GroupStudents" ToRole="Groups" />
+    <NavigationProperty Name="Role" Relationship="Self.FK_GroupStudents_Roles" FromRole="GroupStudents" ToRole="Roles" />
+    <NavigationProperty Name="Role1" Relationship="Self.FK_GroupStudents_Roles1" FromRole="GroupStudents" ToRole="Roles" />
+    <NavigationProperty Name="Student" Relationship="Self.FK_GroupStudents_Students" FromRole="GroupStudents" ToRole="Students" />
+  </EntityType>
+  <EntityType Name="Students_CoursesCompleted">
+    <Key>
+      <PropertyRef Name="StudentID" />
+    </Key>
+    <Property Name="StudentID" Type="Int32" Nullable="false" />
+    <Property Name="CourseID" Type="Int32" />
+    <Property Name="Grade" Type="Decimal" Precision="3" Scale="2" />
+    <NavigationProperty Name="Cours" Relationship="Self.FK_Students_CoursesCompleted_Courses" FromRole="Students_CoursesCompleted" ToRole="Courses" />
+    <NavigationProperty Name="Student" Relationship="Self.FK_Students_CoursesCompleted_Students" FromRole="Students_CoursesCompleted" ToRole="Students" />
+  </EntityType>
+  <EntityType Name="Students_EnrolledCourses">
+    <Key>
+      <PropertyRef Name="StudentID" />
+    </Key>
+    <Property Name="StudentID" Type="Int32" Nullable="false" />
+    <Property Name="EnrolledCourseCode" Type="String" MaxLength="11" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Student" Relationship="Self.FK_Students_EnrolledCourses_Students" FromRole="Students_EnrolledCourses" ToRole="Students" />
+  </EntityType>
+  <EntityType Name="Students_ProgrammingLanguages">
+    <Key>
+      <PropertyRef Name="StudentID" />
+    </Key>
+    <Property Name="StudentID" Type="Int32" Nullable="false" />
+    <Property Name="LanguageID" Type="Int32" />
+    <Property Name="ProficiencyRank" Type="Int32" />
+    <NavigationProperty Name="ProgrammingLanguage" Relationship="Self.FK_Students_ProgrammingLanguages_ProgrammingLanguages" FromRole="Students_ProgrammingLanguages" ToRole="ProgrammingLanguages" />
+    <NavigationProperty Name="Student" Relationship="Self.FK_Students_ProgrammingLanguages_Students" FromRole="Students_ProgrammingLanguages" ToRole="Students" />
+  </EntityType>
+  <EntityType Name="Students_RoleInterests">
+    <Key>
+      <PropertyRef Name="StudentID" />
+    </Key>
+    <Property Name="StudentID" Type="Int32" Nullable="false" />
+    <Property Name="RoleID" Type="Int32" />
+    <Property Name="InterestLevel" Type="Int32" />
+    <NavigationProperty Name="Role" Relationship="Self.FK_Students_RoleInterests_Roles" FromRole="Students_RoleInterests" ToRole="Roles" />
+    <NavigationProperty Name="Student" Relationship="Self.FK_Students_RoleInterests_Students" FromRole="Students_RoleInterests" ToRole="Students" />
+  </EntityType>
+  <EntityType Name="Students_Skills">
+    <Key>
+      <PropertyRef Name="StudentID" />
+    </Key>
+    <Property Name="StudentID" Type="Int32" Nullable="false" />
+    <Property Name="SkillID" Type="Int32" />
+    <Property Name="ProficiencyLevel" Type="Int32" />
+    <NavigationProperty Name="Skill" Relationship="Self.FK_Students_Skills_Skills" FromRole="Students_Skills" ToRole="Skills" />
+    <NavigationProperty Name="Student" Relationship="Self.FK_Students_Skills_Students" FromRole="Students_Skills" ToRole="Students" />
+  </EntityType>
+  <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+    <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="AspNetUserClaims" Type="Self.AspNetUserClaim" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AspNetUsers">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="AspNetUserClaims">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+    <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="AspNetUserLogins" Type="Self.AspNetUserLogin" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AspNetUsers">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="AspNetUserLogins">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_InstructorCourseSections_Courses">
+    <End Role="Courses" Type="Self.Cours" Multiplicity="1" />
+    <End Role="Instructors_CourseSections" Type="Self.Instructors_CourseSections" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Courses">
+        <PropertyRef Name="CourseID" />
+      </Principal>
+      <Dependent Role="Instructors_CourseSections">
+        <PropertyRef Name="CourseID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Students_CoursesCompleted_Courses">
+    <End Role="Courses" Type="Self.Cours" Multiplicity="0..1" />
+    <End Role="Students_CoursesCompleted" Type="Self.Students_CoursesCompleted" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Courses">
+        <PropertyRef Name="CourseID" />
+      </Principal>
+      <Dependent Role="Students_CoursesCompleted">
+        <PropertyRef Name="CourseID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Groups_InstructorCourseSections">
+    <End Role="Instructors_CourseSections" Type="Self.Instructors_CourseSections" Multiplicity="0..1" />
+    <End Role="Groups" Type="Self.Group" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Instructors_CourseSections">
+        <PropertyRef Name="InstructorCourseID" />
+      </Principal>
+      <Dependent Role="Groups">
+        <PropertyRef Name="CourseSectionID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GroupStudents_Groups">
+    <End Role="Groups" Type="Self.Group" Multiplicity="1" />
+    <End Role="GroupStudents" Type="Self.GroupStudent" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Groups">
+        <PropertyRef Name="GroupID" />
+      </Principal>
+      <Dependent Role="GroupStudents">
+        <PropertyRef Name="GroupID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_InstructorCourseSections_Instructors">
+    <End Role="Instructors" Type="Self.Instructor" Multiplicity="1" />
+    <End Role="Instructors_CourseSections" Type="Self.Instructors_CourseSections" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Instructors">
+        <PropertyRef Name="InstructorID" />
+      </Principal>
+      <Dependent Role="Instructors_CourseSections">
+        <PropertyRef Name="InstructorID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Students_ProgrammingLanguages_ProgrammingLanguages">
+    <End Role="ProgrammingLanguages" Type="Self.ProgrammingLanguage" Multiplicity="0..1" />
+    <End Role="Students_ProgrammingLanguages" Type="Self.Students_ProgrammingLanguages" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProgrammingLanguages">
+        <PropertyRef Name="LanguageID" />
+      </Principal>
+      <Dependent Role="Students_ProgrammingLanguages">
+        <PropertyRef Name="LanguageID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GroupStudents_Roles">
+    <End Role="Roles" Type="Self.Role" Multiplicity="0..1" />
+    <End Role="GroupStudents" Type="Self.GroupStudent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Roles">
+        <PropertyRef Name="RoleID" />
+      </Principal>
+      <Dependent Role="GroupStudents">
+        <PropertyRef Name="Project1RoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GroupStudents_Roles1">
+    <End Role="Roles" Type="Self.Role" Multiplicity="0..1" />
+    <End Role="GroupStudents" Type="Self.GroupStudent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Roles">
+        <PropertyRef Name="RoleID" />
+      </Principal>
+      <Dependent Role="GroupStudents">
+        <PropertyRef Name="Project2RoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Students_RoleInterests_Roles">
+    <End Role="Roles" Type="Self.Role" Multiplicity="0..1" />
+    <End Role="Students_RoleInterests" Type="Self.Students_RoleInterests" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Roles">
+        <PropertyRef Name="RoleID" />
+      </Principal>
+      <Dependent Role="Students_RoleInterests">
+        <PropertyRef Name="RoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Students_Skills_Skills">
+    <End Role="Skills" Type="Self.Skill" Multiplicity="0..1" />
+    <End Role="Students_Skills" Type="Self.Students_Skills" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Skills">
+        <PropertyRef Name="SkillID" />
+      </Principal>
+      <Dependent Role="Students_Skills">
+        <PropertyRef Name="SkillID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GroupStudents_Students">
+    <End Role="Students" Type="Self.Student" Multiplicity="0..1" />
+    <End Role="GroupStudents" Type="Self.GroupStudent" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Students">
+        <PropertyRef Name="StudentID" />
+      </Principal>
+      <Dependent Role="GroupStudents">
+        <PropertyRef Name="StudentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Students_CoursesCompleted_Students">
+    <End Role="Students" Type="Self.Student" Multiplicity="1" />
+    <End Role="Students_CoursesCompleted" Type="Self.Students_CoursesCompleted" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Students">
+        <PropertyRef Name="StudentID" />
+      </Principal>
+      <Dependent Role="Students_CoursesCompleted">
+        <PropertyRef Name="StudentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Students_EnrolledCourses_Students">
+    <End Role="Students" Type="Self.Student" Multiplicity="1" />
+    <End Role="Students_EnrolledCourses" Type="Self.Students_EnrolledCourses" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Students">
+        <PropertyRef Name="StudentID" />
+      </Principal>
+      <Dependent Role="Students_EnrolledCourses">
+        <PropertyRef Name="StudentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Students_ProgrammingLanguages_Students">
+    <End Role="Students" Type="Self.Student" Multiplicity="1" />
+    <End Role="Students_ProgrammingLanguages" Type="Self.Students_ProgrammingLanguages" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Students">
+        <PropertyRef Name="StudentID" />
+      </Principal>
+      <Dependent Role="Students_ProgrammingLanguages">
+        <PropertyRef Name="StudentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Students_RoleInterests_Students">
+    <End Role="Students" Type="Self.Student" Multiplicity="0..1" />
+    <End Role="Students_RoleInterests" Type="Self.Students_RoleInterests" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Students">
+        <PropertyRef Name="StudentID" />
+      </Principal>
+      <Dependent Role="Students_RoleInterests">
+        <PropertyRef Name="RoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Students_Skills_Students">
+    <End Role="Students" Type="Self.Student" Multiplicity="1" />
+    <End Role="Students_Skills" Type="Self.Students_Skills" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Students">
+        <PropertyRef Name="StudentID" />
+      </Principal>
+      <Dependent Role="Students_Skills">
+        <PropertyRef Name="StudentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="AspNetUserRoles">
+    <End Role="AspNetRoles" Type="Self.AspNetRole" Multiplicity="*" />
+    <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="*" />
+  </Association>
+  <EntityContainer Name="GrouperDBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="C__MigrationHistory" EntityType="Self.C__MigrationHistory" />
+    <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRole" />
+    <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaim" />
+    <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogin" />
+    <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUser" />
+    <EntitySet Name="Courses" EntityType="Self.Cours" />
+    <EntitySet Name="Groups" EntityType="Self.Group" />
+    <EntitySet Name="Instructors" EntityType="Self.Instructor" />
+    <EntitySet Name="Instructors_CourseSections" EntityType="Self.Instructors_CourseSections" />
+    <EntitySet Name="ProgrammingLanguages" EntityType="Self.ProgrammingLanguage" />
+    <EntitySet Name="Roles" EntityType="Self.Role" />
+    <EntitySet Name="Skills" EntityType="Self.Skill" />
+    <EntitySet Name="Students" EntityType="Self.Student" />
+    <EntitySet Name="GroupStudents" EntityType="Self.GroupStudent" />
+    <EntitySet Name="Students_CoursesCompleted" EntityType="Self.Students_CoursesCompleted" />
+    <EntitySet Name="Students_EnrolledCourses" EntityType="Self.Students_EnrolledCourses" />
+    <EntitySet Name="Students_ProgrammingLanguages" EntityType="Self.Students_ProgrammingLanguages" />
+    <EntitySet Name="Students_RoleInterests" EntityType="Self.Students_RoleInterests" />
+    <EntitySet Name="Students_Skills" EntityType="Self.Students_Skills" />
+    <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+      <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+      <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+      <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+      <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
+    </AssociationSet>
+    <AssociationSet Name="FK_InstructorCourseSections_Courses" Association="Self.FK_InstructorCourseSections_Courses">
+      <End Role="Courses" EntitySet="Courses" />
+      <End Role="Instructors_CourseSections" EntitySet="Instructors_CourseSections" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Students_CoursesCompleted_Courses" Association="Self.FK_Students_CoursesCompleted_Courses">
+      <End Role="Courses" EntitySet="Courses" />
+      <End Role="Students_CoursesCompleted" EntitySet="Students_CoursesCompleted" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Groups_InstructorCourseSections" Association="Self.FK_Groups_InstructorCourseSections">
+      <End Role="Instructors_CourseSections" EntitySet="Instructors_CourseSections" />
+      <End Role="Groups" EntitySet="Groups" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GroupStudents_Groups" Association="Self.FK_GroupStudents_Groups">
+      <End Role="Groups" EntitySet="Groups" />
+      <End Role="GroupStudents" EntitySet="GroupStudents" />
+    </AssociationSet>
+    <AssociationSet Name="FK_InstructorCourseSections_Instructors" Association="Self.FK_InstructorCourseSections_Instructors">
+      <End Role="Instructors" EntitySet="Instructors" />
+      <End Role="Instructors_CourseSections" EntitySet="Instructors_CourseSections" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Students_ProgrammingLanguages_ProgrammingLanguages" Association="Self.FK_Students_ProgrammingLanguages_ProgrammingLanguages">
+      <End Role="ProgrammingLanguages" EntitySet="ProgrammingLanguages" />
+      <End Role="Students_ProgrammingLanguages" EntitySet="Students_ProgrammingLanguages" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GroupStudents_Roles" Association="Self.FK_GroupStudents_Roles">
+      <End Role="Roles" EntitySet="Roles" />
+      <End Role="GroupStudents" EntitySet="GroupStudents" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GroupStudents_Roles1" Association="Self.FK_GroupStudents_Roles1">
+      <End Role="Roles" EntitySet="Roles" />
+      <End Role="GroupStudents" EntitySet="GroupStudents" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Students_RoleInterests_Roles" Association="Self.FK_Students_RoleInterests_Roles">
+      <End Role="Roles" EntitySet="Roles" />
+      <End Role="Students_RoleInterests" EntitySet="Students_RoleInterests" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Students_Skills_Skills" Association="Self.FK_Students_Skills_Skills">
+      <End Role="Skills" EntitySet="Skills" />
+      <End Role="Students_Skills" EntitySet="Students_Skills" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GroupStudents_Students" Association="Self.FK_GroupStudents_Students">
+      <End Role="Students" EntitySet="Students" />
+      <End Role="GroupStudents" EntitySet="GroupStudents" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Students_CoursesCompleted_Students" Association="Self.FK_Students_CoursesCompleted_Students">
+      <End Role="Students" EntitySet="Students" />
+      <End Role="Students_CoursesCompleted" EntitySet="Students_CoursesCompleted" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Students_EnrolledCourses_Students" Association="Self.FK_Students_EnrolledCourses_Students">
+      <End Role="Students" EntitySet="Students" />
+      <End Role="Students_EnrolledCourses" EntitySet="Students_EnrolledCourses" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Students_ProgrammingLanguages_Students" Association="Self.FK_Students_ProgrammingLanguages_Students">
+      <End Role="Students" EntitySet="Students" />
+      <End Role="Students_ProgrammingLanguages" EntitySet="Students_ProgrammingLanguages" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Students_RoleInterests_Students" Association="Self.FK_Students_RoleInterests_Students">
+      <End Role="Students" EntitySet="Students" />
+      <End Role="Students_RoleInterests" EntitySet="Students_RoleInterests" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Students_Skills_Students" Association="Self.FK_Students_Skills_Students">
+      <End Role="Students" EntitySet="Students" />
+      <End Role="Students_Skills" EntitySet="Students_Skills" />
+    </AssociationSet>
+    <AssociationSet Name="AspNetUserRoles" Association="Self.AspNetUserRoles">
+      <End Role="AspNetRoles" EntitySet="AspNetRoles" />
+      <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
