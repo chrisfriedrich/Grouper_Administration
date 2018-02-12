@@ -50,9 +50,11 @@ namespace GroupBuilder
         public int Year { get; set; }
         public bool? CurrentCourseSectionFlag { get; set; }
         public DateTime? CreatedDate { get; set; }
+        public List<Group> Groups { get; set; }
         public List<Student> Students { get; set; }
         public InstructorCourse()
         {
+            Groups = new List<Group>();
             Students = new List<Student>();
         }
     }
@@ -869,6 +871,7 @@ namespace GroupBuilder
             if(course.CourseID > 0)
             {
                 course.Course = GetCourse(course.CourseID);
+                course.Groups = GetInstructorCourseGroups(course.InstructorCourseID);
                 course.Students = GetStudents(course.InstructorCourseID);
             }
 
@@ -898,7 +901,7 @@ namespace GroupBuilder
             con.Open();
             SqlCommand cmd = new SqlCommand(
                 @"SELECT GroupID FROM Groups WHERE
-                InstructorCourseID = @InstructorCourseID 
+                CourseSectionID = @InstructorCourseID 
                 AND GroupNumber = @GroupNumber;", con);
             cmd.Parameters.AddWithValue("@InstructorCourseID", group.InstructorCourseID);
             cmd.Parameters.AddWithValue("@GroupNumber", group.GroupNumber);
@@ -909,14 +912,14 @@ namespace GroupBuilder
             {
                 cmd = new SqlCommand(
                 @"INSERT INTO Groups     
-                    (InstructorCourseID, GroupNumber, Name, Notes) 
+                    (CourseSectionID, GroupNumber, Name, Notes) 
                     VALUES 
                     (@InstructorCourseID, @GroupNumber, @Name, @Notes);
                     SELECT SCOPE_IDENTITY();", con);
                 cmd.Parameters.AddWithValue("@InstructorCourseID", group.InstructorCourseID);
                 cmd.Parameters.AddWithValue("@GroupNumber", group.GroupNumber);
-                cmd.Parameters.AddWithValue("@Name", group.Name);
-                cmd.Parameters.AddWithValue("@Notes", group.Notes);
+                cmd.Parameters.AddWithValue("@Name", group.Name ?? (Object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@Notes", group.Notes ?? (Object)DBNull.Value);
 
                 con.Open();
                 groupID = Convert.ToInt32(cmd.ExecuteScalar());
@@ -938,6 +941,7 @@ namespace GroupBuilder
             {
                 group = new Group();
 
+                group.InstructorCourseID = GetSafeInteger(reader, "CourseSectionID");
                 group.GroupID = groupID;
                 group.GroupNumber = GetSafeInteger(reader, "GroupNumber");
                 group.Name = GetSafeString(reader, "Name");
@@ -954,13 +958,23 @@ namespace GroupBuilder
             return group;
         }
 
+        public static void DeleteGroup(int groupID)
+        {
+            SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
+            SqlCommand cmd = new SqlCommand(@"DELETE FROM Groups WHERE GroupID = @GroupID;", con);
+            cmd.Parameters.AddWithValue("@GroupID", groupID);
+            con.Open();
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
+
         public static List<Group> GetInstructorCourseGroups(int instructorCourseID)
         {
             List<Group> groups = new List<Group>();
             List<int> groupIDs = new List<int>();
 
             SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
-            SqlCommand cmd = new SqlCommand(@"SELECT * FROM Groups WHERE InstructorCourseID = @InstructorCourseID ORDER BY GroupNumber;", con);
+            SqlCommand cmd = new SqlCommand(@"SELECT * FROM Groups WHERE CourseSectionID = @InstructorCourseID ORDER BY GroupNumber;", con);
             cmd.Parameters.AddWithValue("@InstructorCourseID", instructorCourseID);
             con.Open();
             SqlDataReader reader = cmd.ExecuteReader();
@@ -1063,6 +1077,7 @@ namespace GroupBuilder
 
             SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
             SqlCommand cmd = new SqlCommand(@"SELECT StudentID FROM GroupStudents WHERE GroupID = @GroupID;", con);
+            cmd.Parameters.AddWithValue("@GroupID", groupID);
             con.Open();
             SqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read())

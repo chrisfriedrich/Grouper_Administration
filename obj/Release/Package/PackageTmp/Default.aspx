@@ -13,7 +13,7 @@
             You have not yet created any class sections.&nbsp;&nbsp;Click <b>Create Section</b> to create a new class section.
         </p>
     </asp:Panel>
-    <asp:Panel ID="AddCourseSectionPanel" runat="server">
+    <asp:Panel ID="AddCourseSectionPanel" runat="server" Visible="false" CssClass="panel panel-default">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -58,24 +58,26 @@
                     </div>
                 </div>
             </div>
-        </div>
-        
+        </div>     
     </asp:Panel>
+    <div class="row">
+        <div class="col-md-12">
+            <asp:LinkButton ID="CreateInstructorCourseLinkButton" runat="server" CssClass="btn btn-default btn-sm float-right" OnClick="CreateInstructorCourseLinkButton_Click"><span class="fa fa-plus"></span>&nbsp;&nbsp;Create Course Section</asp:LinkButton>
+        </div>
+    </div>
     <asp:Panel ID="CoursesPanel" runat="server" Visible="false">
         <p class="lead">
             Below is a list of your current course sections.  Click <b>Select Course</b> to view your students and groups.
         </p>
-    <div>
-        <asp:GridView ID="CoursesGridView" runat="server" CssClass="table table-bodered table-condensed" AutoGenerateColumns="false" OnRowCommand="CoursesGridView_RowCommand">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                        <asp:GridView ID="CoursesGridView" runat="server" CssClass="table table-bodered table-condensed" AutoGenerateColumns="false" OnRowCommand="CoursesGridView_RowCommand">
             <Columns>
-                <asp:TemplateField HeaderStyle-Width="1%">
-                    <ItemTemplate>
-                        <asp:LinkButton ID="EditInstructorCourseLinkButton" runat="server" CssClass="btn btn-default btn-sm" CommandName="edit_instructor_course" CommandArgument='<%# Eval("InstructorCourseID") %>'><span class="fa fa-okay"></span>&nbsp;&nbsp;Select Course</asp:LinkButton>
-                    </ItemTemplate>
-                </asp:TemplateField>
+
                 <asp:TemplateField HeaderText="Course">
                     <ItemTemplate>
-                        <asp:Label ID="CourseLabel" Text='<%# Eval("Course.Name") %>' runat="server"></asp:Label>
+                        <asp:Label ID="CourseLabel" Text='<%# Eval("Course.FullName") %>' runat="server"></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="Term">
@@ -83,14 +85,21 @@
                         <asp:Label ID="TermLabel" runat="server" Text='<%# Eval("TermName") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-
                 <asp:TemplateField HeaderStyle-Width="1%">
                     <ItemTemplate>
-                        <asp:LinkButton ID="RemoveInstructorCourse" runat="server" CssClass="btn btn-danger btn-sm" CommandName="delete_instructor_course" CommandArgument='<%# Eval("InstructorCourseID") %>'><span class="fa fa-remove"></span></asp:LinkButton>
+                        <asp:LinkButton ID="EditInstructorCourseLinkButton" runat="server" CssClass="btn btn-default btn-xs" CommandName="edit_instructor_course" CommandArgument='<%# Eval("InstructorCourseID") %>'><span class="fa fa-check"></span>&nbsp;&nbsp;Select Course</asp:LinkButton>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderStyle-Width="1%">
+                    <ItemTemplate>
+                        <asp:LinkButton ID="RemoveInstructorCourse" runat="server" CssClass="btn btn-danger btn-xs" CommandName="delete_instructor_course" CommandArgument='<%# Eval("InstructorCourseID") %>'><span class="fa fa-remove"></span>&nbsp;&nbsp;Delete</asp:LinkButton>
                     </ItemTemplate>
                 </asp:TemplateField>
             </Columns>
         </asp:GridView>
+            </div>
+        </div>
+
     </div>
     </asp:Panel>
     

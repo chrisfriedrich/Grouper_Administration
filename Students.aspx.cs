@@ -58,10 +58,10 @@ namespace GroupBuilderAdmin
             SelectedStudentIDHiddenField.Value = student.StudentID.ToString();
             MessageBoxTitleLabel.Text = "Delete Student?";
             MessageBoxMessageLabel.Text = "Are you sure you want to delete the student '" + student.FirstName + " " + student.LastName + "?";
-            MessageBoxOkayLinkButton.Text = "<span class='fa fa-ban'>&nbsp;&nbsp;Cancel</span>";
+            MessageBoxOkayLinkButton.Text = "<span class='fa fa-ban'></span>&nbsp;&nbsp;Cancel";
             MessageBoxOkayLinkButton.Visible = true;
             MessageBoxCreateLinkButton.CssClass = "btn btn-danger";
-            MessageBoxCreateLinkButton.Text = "<span class='fa fa-remove'>&nbsp;&nbsp;Delete Student</span>";
+            MessageBoxCreateLinkButton.Text = "<span class='fa fa-remove'></span>&nbsp;&nbsp;Delete Student";
             MessageBoxCreateLinkButton.Visible = true;
 
             ScriptManager.RegisterStartupScript(Page, Page.GetType(), "messageBox", "$('#messageBox').modal();", true);
@@ -73,10 +73,10 @@ namespace GroupBuilderAdmin
             SelectedStudentIDHiddenField.Value = 0.ToString();
             MessageBoxTitleLabel.Text = "Delete All Students?";
             MessageBoxMessageLabel.Text = "Are you sure you want to delete all students associated with this course section?";
-            MessageBoxOkayLinkButton.Text = "<span class='fa fa-ban'>&nbsp;&nbsp;Cancel</span>";
+            MessageBoxOkayLinkButton.Text = "<span class='fa fa-ban'></span>&nbsp;&nbsp;Cancel";
             MessageBoxOkayLinkButton.Visible = true;
             MessageBoxCreateLinkButton.CssClass = "btn btn-danger";
-            MessageBoxCreateLinkButton.Text = "<span class='fa fa-remove'>&nbsp;&nbsp;Delete Students</span>";
+            MessageBoxCreateLinkButton.Text = "<span class='fa fa-remove'></span>&nbsp;&nbsp;Delete Students";
             MessageBoxCreateLinkButton.Visible = true;
 
             ScriptManager.RegisterStartupScript(Page, Page.GetType(), "messageBox", "$('#messageBox').modal();", true);
@@ -95,9 +95,6 @@ namespace GroupBuilderAdmin
                 CourseNameLabel.Text = course.Course.FullName;
 
                 StudentsGridView_BindGridView();
-                //ScriptManager.RegisterStartupScript(StudentsGridView, StudentsGridView.GetType(), "messageBox", "$('#messageBox').modal();", true);
-
-
             }
         }
 
@@ -196,18 +193,9 @@ namespace GroupBuilderAdmin
         private string SaveFile(HttpPostedFile file)
         {
 
-            // Specify the path to save the uploaded file to.
-            //string savePath = "c:\\temp\\uploads\\";
-
-            // Get the name of the file to upload.
-            //string fileName = file.FileName;
             string fileName = "Import_" + DateTime.Now.Day.ToString();
             string extension = ".csv";
             string fullFileName = fileName + extension;
-
-
-            // Create the path and file name to check for duplicates.
-            //string pathToCheck = Server.MapPath(FILE_PATH + fullFileName);
 
             string pathToCheck = "";
 
@@ -220,19 +208,13 @@ namespace GroupBuilderAdmin
                 pathToCheck = Server.MapPath(LOCAL_PATH + fullFileName);
             }
 
-            // Create a temporary file name to use for checking duplicates.
             string tempfileName = "";
-
-            // Check to see if a file already exists with the
-            // same name as the file to upload.   
 
             if (System.IO.File.Exists(pathToCheck))
             {
                 int counter = 2;
                 while (System.IO.File.Exists(pathToCheck))
                 {
-                    // if a file with this name already exists,
-                    // prefix the filename with a number.
                     tempfileName = fileName + "_" + counter.ToString() + extension;
                     if (LOCAL_FLAG == false)
                     {
@@ -246,19 +228,12 @@ namespace GroupBuilderAdmin
                 }
 
                 fileName = tempfileName;
-
-                // Notify the user that the file name was changed.
-                //UploadStatusLabel.Text = "A file with the same name already exists." +
-                //    "<br />Your file was saved as " + fileName;
             }
             else
             {
-                // Notify the user that the file was saved successfully.
-                //UploadStatusLabel.Text = "Your file was uploaded successfully.";
                 fileName = fullFileName;
             }
 
-            // Append the name of the file to upload to the path.
             string savePath = "";
 
             if (LOCAL_FLAG == false)
@@ -269,9 +244,6 @@ namespace GroupBuilderAdmin
             {
                 savePath = Server.MapPath(LOCAL_PATH + fileName);
             }
-
-            // Call the SaveAs method to save the uploaded
-            // file to the specified directory.
 
             file.SaveAs(savePath);
             return fileName;
@@ -285,11 +257,6 @@ namespace GroupBuilderAdmin
                 Student student = GrouperMethods.GetStudent(studentID);
 
                 ConfirmDeleteMessageBox(student);
-                //MessageBox("Student Deleted", "The student record has been deleted.", "Okay");
-
-                //GrouperMethods.DeleteStudent(studentID);
-
-                //StudentsGridView_BindGridView();
             }
             if(e.CommandName == "edit_student")
             {
@@ -510,27 +477,6 @@ namespace GroupBuilderAdmin
             mailMessage.Body = messageBody;
             mailMessage.IsBodyHtml = true;
 
-            // Embed header image
-            string path;
-
-            //if (HttpContext.Current != null)
-            //{
-            //    path = HttpContext.Current.Server.MapPath("~/Images/graduate-programs-email-header.jpg");
-            //}
-            //else
-            //{
-            //    path = HostingEnvironment.MapPath("~/Images/graduate-programs-email-header.jpg");
-            //}
-
-            //AlternateView htmlView = AlternateView.CreateAlternateViewFromString(messageBody, null, MediaTypeNames.Text.Html);
-            //LinkedResource headerImage = new LinkedResource(path, "image/jpeg");
-            //headerImage.ContentId = "headerImage";
-            //htmlView.LinkedResources.Add(headerImage);
-
-            //mailMessage.AlternateViews.Add(htmlView);
-            //Attachment att = new Attachment(path);
-            //att.ContentDisposition.Inline = true;
-
             if (client.Host != null)
             {
                 if (mailMessage.To.Count > 0)
@@ -570,7 +516,29 @@ namespace GroupBuilderAdmin
 
         protected void SendWelcomeToAllStudentsLinkButton_Click(object sender, EventArgs e)
         {
+            InstructorCourse course = GrouperMethods.GetInstructorCourse(InstructorCourseID);
 
+            if (course.Students.Where(x => x.InitialNotificationSentDate == null).Count() == 0)
+            {
+                MessageBox("No Students to Notify", "All students have already been sent a welcome email.  To resend, select <b>Send Welcome</b> for the individual student row.", "Okay");
+            }
+            else
+            {
+                foreach (Student student in course.Students)
+                {
+                    if (student.InitialNotificationSentDate == null)
+                    {
+                        SendSurveyLinkMessage(student);
+
+                        student.InitialNotificationSentDate = DateTime.Now;
+                        GrouperMethods.UpdateStudent(student);
+                    }
+                }
+
+                StudentsGridView_BindGridView();
+
+                MessageBox("Welcome Messages Sent", "Welcome messages have been sent to all previously unnotified students.", "Okay");
+            }
         }
 
         protected void AddProgrammingLanguageLinkButton_Click(object sender, EventArgs e)
@@ -680,6 +648,11 @@ namespace GroupBuilderAdmin
                 Label programmingLanguagesLabel = (Label)e.Row.FindControl("LanguagesLabel");
                 programmingLanguagesLabel.Text = languages;
             }
+        }
+
+        protected void BeginGroupingLinkButton_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/Groups.aspx?ID=" + InstructorCourseID);
         }
     }
 }

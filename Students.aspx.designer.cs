@@ -121,6 +121,15 @@ namespace GroupBuilderAdmin {
         protected global::System.Web.UI.WebControls.Label CourseNameLabel;
         
         /// <summary>
+        /// ReturnToCoursesHyperLink control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink ReturnToCoursesHyperLink;
+        
+        /// <summary>
         /// ImportStudentsLinkButton control.
         /// </summary>
         /// <remarks>
@@ -137,6 +146,15 @@ namespace GroupBuilderAdmin {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton AddStudentLinkButton;
+        
+        /// <summary>
+        /// BeginGroupingLinkButton control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton BeginGroupingLinkButton;
         
         /// <summary>
         /// DeleteAllStudentsLinkButton control.

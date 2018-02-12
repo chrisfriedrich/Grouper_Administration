@@ -55,14 +55,24 @@ input[type="select"] {
 }
 
 h1, h2, h3, h4, h5 {
-    font-family: 'Courier New';
+    font-family: 'Segoe UI';
 }
 
 .control-label {
-    font-family: 'Courier New';
+    font-family: 'Segoe UI';
 }
 
 body, html {
-    font-family: 'Courier New';
+    font-family: 'Segoe UI';
     font-weight: 500;
+}
+
+.table {
+    border: 1px solid lightgray;
+}
+
+.panel-default.panel-condensed {
+    padding: 4px !important;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }

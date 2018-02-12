@@ -193,7 +193,9 @@
     <Content Include="fonts\fontawesome-webfont.woff" />
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.eot" />
+    <None Include="Properties\PublishProfiles\GrouperAdmin - FTP %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\GrouperAdmin - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\GrouperAdmin - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\GrouperAdmin - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Groups.aspx" />

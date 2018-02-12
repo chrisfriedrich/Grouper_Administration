@@ -42,9 +42,11 @@ namespace GroupBuilderAdmin
                 {
                     CoursesPanel.Visible = true;
                     NoCoursesPanel.Visible = false;
+                    AddCourseSectionPanel.Visible = false;
                 }
                 else
                 {
+                    AddCourseSectionPanel.Visible = false;
                     NoCoursesPanel.Visible = true;
                     CoursesPanel.Visible = false;
                 }
@@ -108,7 +110,14 @@ namespace GroupBuilderAdmin
 
         protected void CancelAddCourseLinkButton_Click(object sender, EventArgs e)
         {
+            CoursesDropDownList.SelectedIndex = 0;
+            TermsDropDownList.SelectedIndex = 0;
+            YearsDropDownList.SelectedIndex = 0;
+            TimesDropDownList.SelectedIndex = 0;
 
+            AddCourseSectionPanel.Visible = false;
+            CreateInstructorCourseLinkButton.Visible = true;
+            CoursesPanel.Visible = true;
         }
 
         protected void SaveCourseLinkButton_Click(object sender, EventArgs e)
@@ -160,6 +169,13 @@ namespace GroupBuilderAdmin
             {
                 Response.Redirect("students.aspx?ID=" + instructorCourseID);
             }
+        }
+
+        protected void CreateInstructorCourseLinkButton_Click(object sender, EventArgs e)
+        {
+            AddCourseSectionPanel.Visible = true;
+            CreateInstructorCourseLinkButton.Visible = false;
+            CoursesPanel.Visible = false;
         }
     }
 }

@@ -17,10 +17,12 @@
                             <asp:Label ID="MessageBoxMessageLabel" runat="server" />
                         </div>
                         <div class="modal-footer">
-                            <asp:LinkButton ID="MessageBoxOkayLinkButton" runat="server" data-dismiss="modal" CssClass="btn btn-default">
-                            </asp:LinkButton>
+                            <p>
+                            <asp:LinkButton ID="MessageBoxOkayLinkButton" runat="server" data-dismiss="modal" CssClass="btn btn-default" Style="margin-bottom: 0px;">
+                            </asp:LinkButton>&nbsp;&nbsp;
                             <asp:LinkButton ID="MessageBoxCreateLinkButton" runat="server" OnClick="MessageBoxCreateLinkButton_Click" CssClass="btn btn-default">
                             </asp:LinkButton>
+                            </p>
                         </div>
                     </div>
                 </ContentTemplate>
@@ -33,17 +35,17 @@
         Import Students
     </h3>
 
-    <div class="row" style="width: 50%;">
+    <div class="row">
         <div class="col-md-6">
                 <asp:FileUpload ID="StudentsFileUpload" runat="server" />
 
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
                 <asp:LinkButton ID="CancelImportStudentsLinkButton" runat="server" CssClass="btn btn-default btn-sm" OnClick="CancelImportStudentsLinkButton_Click"><span class="fa fa-ban"></span>&nbsp;&nbsp;Cancel</asp:LinkButton>
                 <asp:LinkButton ID="ProcessStudentsFileLinkButton" runat="server" CssClass="btn btn-default btn-sm" OnClick="ProcessStudentsFileLinkButton_Click"><span class="fa fa-upload"></span>&nbsp;&nbsp;Process File</asp:LinkButton>
 
         </div>
-        <div class="col-md-4"></div>
+        <div class="col-md-3"></div>
     </div>
     </asp:Panel>
 
@@ -59,8 +61,10 @@
         Current Student List for <asp:Label ID="CourseNameLabel" runat="server"></asp:Label>
     </h3>
     <div class="btn-group">
+        <asp:HyperLink ID="ReturnToCoursesHyperLink" runat="server" CssClass="btn btn-default btn-sm" NavigateUrl="~/Default.aspx"><span class="fa fa-arrow-left"></span>&nbsp;&nbsp;Return to Courses</asp:HyperLink>
         <asp:LinkButton ID="ImportStudentsLinkButton" runat="server" CssClass="btn btn-default btn-sm" OnClick="ImportStudentsLinkButton_Click"><span class="fa fa-upload"></span>&nbsp;&nbsp;Import Students From CSV</asp:LinkButton>
         <asp:LinkButton ID="AddStudentLinkButton" runat="server" CssClass="btn btn-default btn-sm float-right" OnClick="AddStudentLinkButton_Click"><span class="fa fa-plus"></span>&nbsp;&nbsp;Add Student</asp:LinkButton>
+        <asp:LinkButton ID="BeginGroupingLinkButton" runat="server" CssClass="btn btn-default btn-sm" OnClick="BeginGroupingLinkButton_Click">Begin Grouping&nbsp;&nbsp;<span class="fa fa-arrow-right"></span></asp:LinkButton>
     </div>
 
     <div>
