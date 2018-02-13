@@ -266,8 +266,7 @@ namespace GroupBuilderAdmin
 
                 Student student = GrouperMethods.GetStudent(studentID);
 
-                StudentListPanel.Visible = false;
-                AddStudentPanel.Visible = true;
+
 
                 FirstNameTextBox.Text = student.FirstName;
                 LastNameTextBox.Text = student.LastName;
@@ -285,7 +284,38 @@ namespace GroupBuilderAdmin
                 }
 
                 ProgrammingLanguagesGridView.DataSource = (List<ProgrammingLanguage>)ViewState["Languages"];
-                ProgrammingLanguagesGridView.DataBind();                
+                ProgrammingLanguagesGridView.DataBind();
+
+                RolesDropDownList.DataSource = GrouperMethods.GetRoles();
+                RolesDropDownList.DataBind();
+
+                ViewState["Roles"] = new List<Role>();
+                
+                foreach(Role role in student.InterestedRoles)
+                {
+                    ((List<Role>)ViewState["Roles"]).Add(role);
+                    RolesDropDownList.Items.FindByValue(role.RoleID.ToString()).Enabled = false;
+                }
+
+                RolesGridView.DataSource = (List<Role>)ViewState["Roles"];
+                RolesGridView.DataBind();
+
+                SkillsDropDownList.DataSource = GrouperMethods.GetSkills();
+                SkillsDropDownList.DataBind();
+
+                ViewState["Skills"] = new List<Skill>();
+
+                foreach (Skill skill in student.Skills)
+                {
+                    ((List<Skill>)ViewState["Skills"]).Add(skill);
+                    SkillsDropDownList.Items.FindByValue(skill.SkillID.ToString()).Enabled = false;
+                }
+
+                SkillsGridView.DataSource = (List<Skill>)ViewState["Skills"];
+                SkillsGridView.DataBind();
+
+                StudentListPanel.Visible = false;
+                AddStudentPanel.Visible = true;
             }
             if(e.CommandName == "send_welcome")
             {
@@ -316,6 +346,24 @@ namespace GroupBuilderAdmin
 
             ProgrammingLanguagesDropDownList.DataSource = GrouperMethods.GetLanguages();
             ProgrammingLanguagesDropDownList.DataBind();
+
+            RolesDropDownList.DataSource = GrouperMethods.GetRoles();
+            RolesDropDownList.DataBind();
+
+            SkillsDropDownList.DataSource = GrouperMethods.GetSkills();
+            SkillsDropDownList.DataBind();
+
+            RolesGridView.DataSource = null;
+            RolesGridView.DataBind();
+
+            ProgrammingLanguagesGridView.DataSource = null;
+            ProgrammingLanguagesGridView.DataBind();
+
+            SkillsGridView.DataSource = null;
+            SkillsGridView.DataBind();
+
+            ProgrammingLanguagesDropDownList.DataSource = GrouperMethods.GetLanguages();
+            ProgrammingLanguagesDropDownList.DataBind();
         }
 
         protected void SaveAddStudentLinkButton_Click(object sender, EventArgs e)
@@ -343,6 +391,26 @@ namespace GroupBuilderAdmin
                             }
                         }
                     }
+                    if (ViewState["Roles"] != null)
+                    {
+                        if (((List<Role>)ViewState["Roles"]).Count() > 0)
+                        {
+                            foreach (Role role in ((List<Role>)ViewState["Roles"]))
+                            {
+                                GrouperMethods.InsertStudentRoleInterest(studentID, role.RoleID, (int)role.InterestLevel);
+                            }
+                        }
+                    }
+                    if (ViewState["Skills"] != null)
+                    {
+                        if (((List<Skill>)ViewState["Skills"]).Count() > 0)
+                        {
+                            foreach (Skill skill in ((List<Skill>)ViewState["Skills"]))
+                            {
+                                GrouperMethods.InsertStudentSkill(studentID, skill.SkillID, (int)skill.ProficiencyLevel);
+                            }
+                        }
+                    }
                 }
             }
             else
@@ -360,13 +428,29 @@ namespace GroupBuilderAdmin
                     student.Languages = (List<ProgrammingLanguage>)ViewState["Languages"];
                 }
 
+                if(ViewState["Roles"] != null)
+                {
+                    student.InterestedRoles = (List<Role>)ViewState["Roles"];
+                }
+
+                if (ViewState["Skills"] != null)
+                {
+                    student.Skills = (List<Skill>)ViewState["Skills"];
+                }
+
                 GrouperMethods.UpdateStudent(student);
             }
 
             StudentsGridView_BindGridView();
 
             SelectedStudentIDHiddenField.Value = null;
-            ViewState["Languages"] = null;
+
+            RolesGridView.DataSource = null;
+            RolesGridView.DataBind();
+            ProgrammingLanguagesGridView.DataSource = null;
+            ProgrammingLanguagesGridView.DataBind();
+            SkillsGridView.DataSource = null;
+            SkillsGridView.DataBind();
 
             AddStudentPanel.Visible = false;
             DuckIDTextBox.Text = "";
@@ -389,6 +473,13 @@ namespace GroupBuilderAdmin
             AddStudentLinkButton.Visible = true;
             SendWelcomeToAllStudentsLinkButton.Visible = true;
             DeleteAllStudentsLinkButton.Visible = true;
+
+            RolesGridView.DataSource = null;
+            RolesGridView.DataBind();
+            ProgrammingLanguagesGridView.DataSource = null;
+            ProgrammingLanguagesGridView.DataBind();
+            SkillsGridView.DataSource = null;
+            SkillsGridView.DataBind();
 
             StudentListPanel.Visible = true;
         }
@@ -647,12 +738,157 @@ namespace GroupBuilderAdmin
                 }
                 Label programmingLanguagesLabel = (Label)e.Row.FindControl("LanguagesLabel");
                 programmingLanguagesLabel.Text = languages;
+
+                string roles = "";
+
+                if (student.InterestedRoles != null)
+                {
+                    if (student.InterestedRoles.Count > 0)
+                    {
+                        roles += "<ul>";
+                        foreach (Role role in student.InterestedRoles)
+                        {
+                            roles += "<li>" + role.Name + " - " + role.InterestLevel.ToString() + "</li>";
+                        }
+                        roles += "</ul>";
+                    }
+                }
+                Label rolesLabel = (Label)e.Row.FindControl("RolesLabel");
+                rolesLabel.Text = roles;
+
+
+                string skills = "";
+
+                if (student.Skills != null)
+                {
+                    if (student.Skills.Count > 0)
+                    {
+                        skills += "<ul>";
+                        foreach (Skill skill in student.Skills)
+                        {
+                            skills += "<li>" + skill.Name + " - " + skill.ProficiencyLevel.ToString() + "</li>";
+                        }
+                        skills += "</ul>";
+                    }
+                }
+                Label skillsLabel = (Label)e.Row.FindControl("SkillsLabel");
+                skillsLabel.Text = skills;
             }
         }
 
         protected void BeginGroupingLinkButton_Click(object sender, EventArgs e)
         {
             Response.Redirect("~/Groups.aspx?ID=" + InstructorCourseID);
+        }
+
+        protected void AddSkillLinkButton_Click(object sender, EventArgs e)
+        {
+            int skillID = int.Parse(SkillsDropDownList.SelectedValue);
+
+            if (ViewState["Skills"] != null)
+            {
+                List<Skill> skills = (List<Skill>)ViewState["Skills"];
+
+                Skill skill = new Skill();
+                skill.Name = SkillsDropDownList.SelectedItem.Text;
+                skill.SkillID = int.Parse(SkillsDropDownList.SelectedValue);
+                skill.ProficiencyLevel = int.Parse(SkillsLevelDropDownList.SelectedValue);
+
+                ((List<Skill>)ViewState["Skills"]).Add(skill);
+
+                SkillsGridView.DataSource = (List<Skill>)ViewState["Skills"];
+                SkillsGridView.DataBind();
+
+                SkillsDropDownList.Items.FindByValue(skill.SkillID.ToString()).Enabled = false;
+            }
+            else
+            {
+                ViewState["Skills"] = new List<Skill>();
+                Skill skill = new Skill();
+                skill.Name = SkillsDropDownList.SelectedItem.Text;
+                skill.SkillID = int.Parse(SkillsDropDownList.SelectedValue);
+                skill.ProficiencyLevel = int.Parse(SkillsLevelDropDownList.SelectedValue);
+
+                ((List<Skill>)ViewState["Skills"]).Add(skill);
+
+                SkillsGridView.DataSource = (List<Skill>)ViewState["Skills"];
+                SkillsGridView.DataBind();
+                SkillsDropDownList.Items.FindByValue(skill.SkillID.ToString()).Enabled = false;
+
+            }
+        }
+
+        protected void SkillsGridView_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "delete_skill")
+            {
+                int skillID = int.Parse(e.CommandArgument.ToString());
+
+                if (ViewState["Skills"] != null)
+                {
+                    ((List<Skill>)ViewState["Skills"]).RemoveAll(x => x.SkillID == skillID).ToString();
+                    SkillsGridView.DataSource = (List<Skill>)ViewState["Skills"];
+                    SkillsGridView.DataBind();
+
+                    SkillsDropDownList.Items.FindByValue(skillID.ToString()).Enabled = true;
+
+                }
+            }
+        }
+
+        protected void AddRoleLinkButton_Click(object sender, EventArgs e)
+        {
+            int roleID = int.Parse(RolesDropDownList.SelectedValue);
+
+            if (ViewState["Roles"] != null)
+            {
+                List<Role> roles = (List<Role>)ViewState["Roles"];
+
+                Role role = new Role();
+                role.Name = RolesDropDownList.SelectedItem.Text;
+                role.RoleID = int.Parse(RolesDropDownList.SelectedValue);
+                role.InterestLevel = int.Parse(RoleInterestDropDownList.SelectedValue);
+
+                ((List<Role>)ViewState["Roles"]).Add(role);
+
+                RolesGridView.DataSource = (List<Role>)ViewState["Roles"];
+                RolesGridView.DataBind();
+
+                RolesDropDownList.Items.FindByValue(role.RoleID.ToString()).Enabled = false;
+            }
+            else
+            {
+                ViewState["Roles"] = new List<Role>();
+                Role role = new Role();
+                role.Name = RolesDropDownList.SelectedItem.Text;
+                role.RoleID = int.Parse(RolesDropDownList.SelectedValue);
+                role.InterestLevel = int.Parse(RoleInterestDropDownList.SelectedValue);
+
+                ((List<Role>)ViewState["Roles"]).Add(role);
+
+                RolesGridView.DataSource = (List<Role>)ViewState["Roles"];
+                RolesGridView.DataBind();
+                RolesDropDownList.Items.FindByValue(role.RoleID.ToString()).Enabled = false;
+
+            }
+        }
+
+        protected void RolesGridView_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "delete_role")
+            {
+                int roleID = int.Parse(e.CommandArgument.ToString());
+
+                if (ViewState["Roles"] != null)
+                {
+                    ((List<Role>)ViewState["Roles"]).RemoveAll(x => x.RoleID == roleID).ToString();
+                    RolesGridView.DataSource = (List<Role>)ViewState["Roles"];
+                    RolesGridView.DataBind();
+
+                    RolesDropDownList.Items.FindByValue(roleID.ToString()).Enabled = true;
+
+                }
+            }
         }
     }
 }

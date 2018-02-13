@@ -247,6 +247,60 @@ namespace GroupBuilderAdmin {
         protected global::System.Web.UI.WebControls.TextBox LastNameTextBox;
         
         /// <summary>
+        /// RolesLabel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label RolesLabel;
+        
+        /// <summary>
+        /// RolesDropDownList control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList RolesDropDownList;
+        
+        /// <summary>
+        /// RoleInterestLabel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label RoleInterestLabel;
+        
+        /// <summary>
+        /// RoleInterestDropDownList control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList RoleInterestDropDownList;
+        
+        /// <summary>
+        /// AddRoleLinkButton control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton AddRoleLinkButton;
+        
+        /// <summary>
+        /// RolesGridView control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView RolesGridView;
+        
+        /// <summary>
         /// ProgrammingLanguagesLabel control.
         /// </summary>
         /// <remarks>
@@ -299,6 +353,60 @@ namespace GroupBuilderAdmin {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView ProgrammingLanguagesGridView;
+        
+        /// <summary>
+        /// SkillsLabel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label SkillsLabel;
+        
+        /// <summary>
+        /// SkillsDropDownList control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList SkillsDropDownList;
+        
+        /// <summary>
+        /// SkillsLevel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label SkillsLevel;
+        
+        /// <summary>
+        /// SkillsLevelDropDownList control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList SkillsLevelDropDownList;
+        
+        /// <summary>
+        /// AddSkillLinkButton control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton AddSkillLinkButton;
+        
+        /// <summary>
+        /// SkillsGridView control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView SkillsGridView;
         
         /// <summary>
         /// CancelAddStudentLinkButton control.

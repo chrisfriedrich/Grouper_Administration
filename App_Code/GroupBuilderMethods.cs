@@ -59,11 +59,20 @@ namespace GroupBuilder
         }
     }
 
+    [Serializable]
     public class Skill
     {
         public int SkillID { get; set; }
         public string Name { get; set; }
         public int? ProficiencyLevel { get; set; }
+    }
+
+    [Serializable]
+    public class Role
+    {
+        public int RoleID { get; set; }
+        public string Name { get; set; }
+        public int? InterestLevel { get; set; }
     }
 
     [Serializable]
@@ -90,12 +99,14 @@ namespace GroupBuilder
         public string OtherProgrammingLanguage { get; set; }
         public int? OtherProgrammingLanguageProficiency { get; set; }
         public DateTime? InitialNotificationSentDate { get; set; }
+        public List<Role> InterestedRoles { get; set; }
         public List<Skill> Skills { get; set; }
         public List<ProgrammingLanguage> Languages { get; set; }
         public List<Course> PriorCourses { get; set; }
 
         public Student()
         {
+            InterestedRoles = new List<Role>();
             Skills = new List<Skill>();
             Languages = new List<ProgrammingLanguage>();
             PriorCourses = new List<Course>();
@@ -375,6 +386,250 @@ namespace GroupBuilder
         }
         #endregion
 
+        #region Roles 
+        public static List<Role> GetRoles()
+        {
+            List<Role> roles = new List<Role>();
+            List<int> roleIDs = new List<int>();
+
+            SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
+            SqlCommand cmd = new SqlCommand(@"SELECT * FROM Roles ORDER BY Name;", con);
+            con.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                Role role = new Role();
+
+                int roleID = GetSafeInteger(reader, "RoleID");
+
+                roleIDs.Add(roleID);
+            }
+            con.Close();
+
+            foreach (int id in roleIDs)
+            {
+                Role role = GetRole(id);
+                if (roles != null)
+                {
+                    roles.Add(role);
+                }
+            }
+
+            return roles;
+        }
+
+        public static Role GetRole(int roleID)
+        {
+            Role role = null;
+
+            SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
+            SqlCommand cmd = new SqlCommand(@"SELECT * FROM Roles WHERE RoleID = @RoleID;", con);
+            cmd.Parameters.AddWithValue("@RoleID", roleID);
+            con.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                role = new Role();
+
+                role.RoleID = GetSafeInteger(reader, "RoleID");
+                role.Name = GetSafeString(reader, "Name");
+
+            }
+            con.Close();
+
+            return role;
+        }
+
+        public static List<Role> GetStudentRoleInterests(int studentID)
+        {
+            List<Role> roles = new List<Role>();
+
+            SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
+            SqlCommand cmd = new SqlCommand(@"SELECT r.RoleID, r.Name, sr.InterestLevel FROM Roles r JOIN Students_RoleInterests sr ON r.RoleID = sr.RoleID WHERE sr.StudentID = @StudentID;", con);
+            cmd.Parameters.AddWithValue("@StudentID", studentID);
+            con.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                Role role = new Role();
+
+                role.RoleID = GetSafeInteger(reader, "RoleID");
+                role.Name = GetSafeString(reader, "Name");
+                role.InterestLevel = GetSafeInteger(reader, "InterestLevel");
+                roles.Add(role);
+            }
+            con.Close();
+
+            return roles;
+        }
+
+        public static void InsertStudentRoleInterest(int studentID, int roleID, int interestLevel)
+        {
+            SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
+            con.Open();
+            SqlCommand cmd = new SqlCommand(
+                @"SELECT *  FROM Students_RoleInterests   
+                WHERE StudentID = @StudentID 
+                AND RoleID = @RoleID;", con);
+            cmd.Parameters.AddWithValue("@StudentID", studentID);
+            cmd.Parameters.AddWithValue("@RoleID", roleID);
+
+            var exists = cmd.ExecuteScalar();
+            con.Close();
+            if (exists == null)
+            {
+                cmd = new SqlCommand(
+                @"INSERT INTO Students_RoleInterests 
+                    (StudentID, RoleID, InterestLevel) 
+                    VALUES 
+                    (@StudentID, @RoleID, @InterestLevel);
+                    SELECT SCOPE_IDENTITY();", con);
+                cmd.Parameters.AddWithValue("@StudentID", studentID);
+                cmd.Parameters.AddWithValue("@RoleID", roleID);
+                cmd.Parameters.AddWithValue("@InterestLevel", interestLevel);
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+        }
+
+        public static void DeleteStudentRoleInterest(int studentID, int roleID)
+        {
+            SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
+            SqlCommand cmd = new SqlCommand(
+                @"DELETE FROM Students_RoleInterests WHERE StudentID = @StudentID AND RoleID = @RoleID;", con);
+            cmd.Parameters.AddWithValue("@StudentID", studentID);
+            cmd.Parameters.AddWithValue("@RoleID", roleID);
+            con.Open();
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
+
+        #endregion
+
+        #region Skills 
+        public static List<Skill> GetSkills()
+        {
+            List<Skill> skills = new List<Skill>();
+            List<int> skillIDs = new List<int>();
+
+            SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
+            SqlCommand cmd = new SqlCommand(@"SELECT * FROM Skills ORDER BY Name;", con);
+            con.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                Skill skill = new Skill();
+
+                int skillID = GetSafeInteger(reader, "SkillID");
+
+                skillIDs.Add(skillID);
+            }
+            con.Close();
+
+            foreach (int id in skillIDs)
+            {
+                Skill skill = GetSkill(id);
+                if (skills != null)
+                {
+                    skills.Add(skill);
+                }
+            }
+
+            return skills;
+        }
+
+        public static Skill GetSkill(int skillID)
+        {
+            Skill skill = null;
+
+            SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
+            SqlCommand cmd = new SqlCommand(@"SELECT * FROM Skills WHERE SkillID = @SkillID;", con);
+            cmd.Parameters.AddWithValue("@SkillID", skillID);
+            con.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                skill = new Skill();
+
+                skill.SkillID = GetSafeInteger(reader, "SkillID");
+                skill.Name = GetSafeString(reader, "Name");
+
+            }
+            con.Close();
+
+            return skill;
+        }
+
+        public static List<Skill> GetStudentSkillInterests(int studentID)
+        {
+            List<Skill> skills = new List<Skill>();
+
+            SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
+            SqlCommand cmd = new SqlCommand(@"SELECT s.SkillID, s.Name, ss.ProficiencyLevel FROM Skills s JOIN Students_Skills ss ON s.SkillID = ss.SkillID WHERE ss.StudentID = @StudentID;", con);
+            cmd.Parameters.AddWithValue("@StudentID", studentID);
+            con.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                Skill skill = new Skill();
+
+                skill.SkillID = GetSafeInteger(reader, "SkillID");
+                skill.Name = GetSafeString(reader, "Name");
+                skill.ProficiencyLevel = GetSafeInteger(reader, "ProficiencyLevel");
+                skills.Add(skill);
+            }
+            con.Close();
+
+            return skills;
+        }
+
+        public static void InsertStudentSkill(int studentID, int skillID, int proficiencyLevel)
+        {
+            SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
+            con.Open();
+            SqlCommand cmd = new SqlCommand(
+                @"SELECT *  FROM Students_Skills    
+                WHERE StudentID = @StudentID 
+                AND SkillID = @SkillID;", con);
+            cmd.Parameters.AddWithValue("@StudentID", studentID);
+            cmd.Parameters.AddWithValue("@SkillID", skillID);
+
+            var exists = cmd.ExecuteScalar();
+            con.Close();
+            if (exists == null)
+            {
+                cmd = new SqlCommand(
+                @"INSERT INTO Students_Skills 
+                    (StudentID, SkillID, ProficiencyLevel) 
+                    VALUES 
+                    (@StudentID, @SkillID, @ProficiencyLevel);
+                    SELECT SCOPE_IDENTITY();", con);
+                cmd.Parameters.AddWithValue("@StudentID", studentID);
+                cmd.Parameters.AddWithValue("@SkillID", skillID);
+                cmd.Parameters.AddWithValue("@ProficiencyLevel", proficiencyLevel);
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+        }
+
+        public static void DeleteStudentSkillInterest(int studentID, int skillID)
+        {
+            SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
+            SqlCommand cmd = new SqlCommand(
+                @"DELETE FROM Students_Skills WHERE StudentID = @StudentID AND SkillID = @SkillID;", con);
+            cmd.Parameters.AddWithValue("@StudentID", studentID);
+            cmd.Parameters.AddWithValue("@SkillID", skillID);
+            con.Open();
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
+
+        #endregion
+
         #region Courses
 
         public static int InsertCourse(Course course)
@@ -612,6 +867,8 @@ namespace GroupBuilder
             if(student != null)
             {
                 student.Languages = GetStudentLanguages(student.StudentID);
+                student.InterestedRoles = GetStudentRoleInterests(student.StudentID);
+                student.Skills = GetStudentSkillInterests(student.StudentID);
             }
             return student;
         }
@@ -645,6 +902,26 @@ namespace GroupBuilder
         {
             SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
             SqlCommand cmd = new SqlCommand(@"DELETE FROM Students_ProgrammingLanguages WHERE StudentID = @StudentID;", con);
+            cmd.Parameters.AddWithValue("@StudentID", studentID);
+            con.Open();
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
+
+        public static void DeleteStudentRoleInterests(int studentID)
+        {
+            SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
+            SqlCommand cmd = new SqlCommand(@"DELETE FROM Students_RoleInterests WHERE StudentID = @StudentID;", con);
+            cmd.Parameters.AddWithValue("@StudentID", studentID);
+            con.Open();
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
+
+        public static void DeleteStudentSkills(int studentID)
+        {
+            SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
+            SqlCommand cmd = new SqlCommand(@"DELETE FROM Students_Skills WHERE StudentID = @StudentID;", con);
             cmd.Parameters.AddWithValue("@StudentID", studentID);
             con.Open();
             cmd.ExecuteNonQuery();
@@ -729,10 +1006,21 @@ namespace GroupBuilder
             con.Close();
 
             DeleteStudentLanguages(student.StudentID);
-
+            DeleteStudentRoleInterests(student.StudentID);
+            DeleteStudentSkills(student.StudentID);
             foreach(ProgrammingLanguage language in student.Languages)
             {
                 InsertStudentLanguage(student.StudentID, language.LanguageID, (int)language.ProficiencyLevel);
+            }
+
+            foreach(Role role in student.InterestedRoles)
+            {
+                InsertStudentRoleInterest(student.StudentID, role.RoleID, (int)role.InterestLevel);
+            }
+
+            foreach (Skill skill in student.Skills)
+            {
+                InsertStudentSkill(student.StudentID, skill.SkillID, (int)skill.ProficiencyLevel);
             }
         }
 
