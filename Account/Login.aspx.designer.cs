@@ -13,6 +13,15 @@ namespace GroupBuilderAdmin.Account {
     public partial class Login {
         
         /// <summary>
+        /// LoginPanel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel LoginPanel;
+        
+        /// <summary>
         /// ErrorMessage control.
         /// </summary>
         /// <remarks>
@@ -56,6 +65,15 @@ namespace GroupBuilderAdmin.Account {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox RememberMe;
+        
+        /// <summary>
+        /// LoginLinkButton control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton LoginLinkButton;
         
         /// <summary>
         /// RegisterHyperLink control.

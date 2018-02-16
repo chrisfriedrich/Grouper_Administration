@@ -4,6 +4,7 @@
 
 <asp:Content runat="server" ID="BodyContent" ContentPlaceHolderID="MainContent">
 
+    <asp:Panel ID="LoginPanel" DefaultButton="LoginLinkButton" runat="server">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <h2><%: Title %></h2>
@@ -41,7 +42,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">
-                            <asp:LinkButton runat="server" OnClick="LogIn" Text="Log in" CssClass="btn btn-default"><span class="fa fa-login"></span>&nbsp;&nbsp;Login</asp:LinkButton>
+                            <asp:LinkButton ID="LoginLinkButton" runat="server" OnClick="LogIn" Text="Log in" CssClass="btn btn-default"><span class="fa fa-login"></span>&nbsp;&nbsp;Login</asp:LinkButton>
                             <asp:HyperLink runat="server" ID="RegisterHyperLink" ViewStateMode="Disabled" CssClass="btn btn-default"><span class="fa fa-register"></span>&nbsp;&nbsp;Register as a new user</asp:HyperLink>
 
                         </div>
@@ -62,4 +63,5 @@
             </section>
         </div>
     </div>
+        </asp:Panel>
 </asp:Content>

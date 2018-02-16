@@ -314,6 +314,8 @@ namespace GroupBuilderAdmin
                 SkillsGridView.DataSource = (List<Skill>)ViewState["Skills"];
                 SkillsGridView.DataBind();
 
+                GUIDLabel.Text = "Student GUID: " + student.GUID;
+
                 StudentListPanel.Visible = false;
                 AddStudentPanel.Visible = true;
             }

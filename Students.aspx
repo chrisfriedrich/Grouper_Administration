@@ -260,6 +260,7 @@
         </div>
         <div class="row">
         <div class="col-md-12">
+            <asp:Label ID="GUIDLabel" runat="server"></asp:Label>
             <asp:LinkButton ID="CancelAddStudentLinkButton" runat="server" CssClass="btn btn-default btn-sm float-right" OnClick="CancelAddStudentLinkButton_Click"><span class="fa fa-ban"></span>&nbsp;&nbsp;Cancel</asp:LinkButton>
             <asp:LinkButton ID="SaveAddStudentLinkButton" runat="server" CssClass="btn btn-default btn-sm float-right" OnClick="SaveAddStudentLinkButton_Click"><span class="fa fa-save"></span>&nbsp;&nbsp;Save Changes</asp:LinkButton>
         </div>

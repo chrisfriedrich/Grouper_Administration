@@ -99,6 +99,8 @@ namespace GroupBuilder
         public string OtherProgrammingLanguage { get; set; }
         public int? OtherProgrammingLanguageProficiency { get; set; }
         public DateTime? InitialNotificationSentDate { get; set; }
+        public DateTime? SurveySubmittedDate { get; set; }
+        public string GUID { get; set; }
         public List<Role> InterestedRoles { get; set; }
         public List<Skill> Skills { get; set; }
         public List<ProgrammingLanguage> Languages { get; set; }
@@ -106,6 +108,9 @@ namespace GroupBuilder
 
         public Student()
         {
+            Guid g;
+            g = Guid.NewGuid();
+            GUID = g.ToString();
             InterestedRoles = new List<Role>();
             Skills = new List<Skill>();
             Languages = new List<ProgrammingLanguage>();
@@ -865,9 +870,9 @@ namespace GroupBuilder
             {
                 cmd = new SqlCommand(
                 @"INSERT INTO Students    
-                    (DuckID, InstructorCourseID, LastName, FirstName, PreferredName, UOID, OutgoingLevel, DevelopmentExperience, LearningExpectations) 
+                    (DuckID, InstructorCourseID, LastName, FirstName, PreferredName, UOID, OutgoingLevel, DevelopmentExperience, LearningExpectations, GUID, SurveySubmittedDate) 
                     VALUES 
-                    (@DuckID, @InstructorCourseID, @LastName, @FirstName, @PreferredName, @UOID, @OutgoingLevel, @DevelopmentExperience, @LearningExpectations);
+                    (@DuckID, @InstructorCourseID, @LastName, @FirstName, @PreferredName, @UOID, @OutgoingLevel, @DevelopmentExperience, @LearningExpectations, @GUID, @SurveySubmittedDate);
                     SELECT SCOPE_IDENTITY();", con);
                 cmd.Parameters.AddWithValue("@DuckID", student.DuckID ?? (Object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@InstructorCourseID", student.InstructorCourseID);
@@ -885,6 +890,8 @@ namespace GroupBuilder
                 cmd.Parameters.AddWithValue("@OutgoingLevel", student.OutgoingLevel ?? (Object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@DevelopmentExperience", student.DevelopmentExperience ?? (Object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@LearningExpectations", student.LearningExpectations ?? (Object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@GUID", student.GUID ?? (Object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@SurveySubmittedDate", student.SurveySubmittedDate ?? (Object)DBNull.Value);
                 con.Open();
                 studentID = Convert.ToInt32(cmd.ExecuteScalar());
                 con.Close();
@@ -915,7 +922,8 @@ namespace GroupBuilder
                 student.DevelopmentExperience = GetSafeString(reader, "DevelopmentExperience");
                 student.LearningExpectations = GetSafeString(reader, "LearningExpectations");
                 student.InitialNotificationSentDate = GetSafeDateTime(reader, "InitialNotificationSentDate");
-
+                student.SurveySubmittedDate = GetSafeDateTime(reader, "SurveySubmittedDate");
+                student.GUID = GetSafeString(reader, "GUID");
             }
             con.Close();
 
@@ -925,6 +933,30 @@ namespace GroupBuilder
                 student.InterestedRoles = GetStudentRoleInterests(student.StudentID);
                 student.Skills = GetStudentSkillInterests(student.StudentID);
             }
+            return student;
+        }
+
+        public static Student GetStudentByGUID(string guid)
+        {
+            Student student = null;
+            int studentID = 0;
+
+            SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
+            SqlCommand cmd = new SqlCommand(@"SELECT * FROM Students WHERE GUID = @GUID;", con);
+            cmd.Parameters.AddWithValue("@GUID", guid);
+            con.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                studentID = GetSafeInteger(reader, "StudentID");
+            }
+            con.Close();
+
+            if (studentID > 0)
+            {
+                student = GetStudent(studentID);
+            }
+
             return student;
         }
 
@@ -985,21 +1017,27 @@ namespace GroupBuilder
 
         public static void UpdateStudent(Student student)
         {
-
             SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
             SqlCommand cmd = new SqlCommand(
                 @"UPDATE Students  
                     SET DuckID = @DuckID,
                         FirstName = @FirstName,
                         LastName = @LastName, 
-                        InitialNotificationSentDate = @InitialNotificationSentDate 
+                        PreferredName = @PreferredName, 
+                        DevelopmentExperience = @DevelopmentExperience, 
+                        LearningExpectations = @LearningExpectations, 
+                        InitialNotificationSentDate = @InitialNotificationSentDate, 
+                        SurveySubmittedDate = @SurveySubmittedDate                       
                     WHERE StudentID = @StudentID;", con);
             cmd.Parameters.AddWithValue("@StudentID", student.StudentID);
             cmd.Parameters.AddWithValue("@DuckID", student.DuckID);
             cmd.Parameters.AddWithValue("@FirstName", student.FirstName);
             cmd.Parameters.AddWithValue("@LastName", student.LastName);
+            cmd.Parameters.AddWithValue("@PreferredName", student.PreferredName);
+            cmd.Parameters.AddWithValue("@DevelopmentExperience", student.DevelopmentExperience);
+            cmd.Parameters.AddWithValue("@LearningExpectations", student.LearningExpectations);
+            cmd.Parameters.AddWithValue("@SurveySubmittedDate", student.SurveySubmittedDate ?? (Object)DBNull.Value);
             cmd.Parameters.AddWithValue("@InitialNotificationSentDate", student.InitialNotificationSentDate ?? (Object)DBNull.Value);
-
 
             con.Open();
             cmd.ExecuteNonQuery();
@@ -1008,6 +1046,7 @@ namespace GroupBuilder
             DeleteStudentLanguages(student.StudentID);
             DeleteStudentRoleInterests(student.StudentID);
             DeleteStudentSkills(student.StudentID);
+
             foreach(ProgrammingLanguage language in student.Languages)
             {
                 InsertStudentLanguage(student.StudentID, language.LanguageID, (int)language.ProficiencyLevel);
