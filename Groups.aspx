@@ -60,7 +60,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-3">
-                <asp:GridView ID="StudentsGridView" runat="server" CssClass="table" AutoGenerateColumns="false">
+                <asp:GridView ID="StudentsGridView" runat="server" CssClass="table" AutoGenerateColumns="false" DataKeyNames="StudentID" OnRowDataBound="StudentsGridView_RowDataBound">
                     <Columns>
                         <asp:TemplateField HeaderText="Students">
                             <ItemTemplate>
@@ -68,7 +68,8 @@
                                 <div class="panel panel-default panel-condensed" id="studentPanel" draggable="true" ondragstart="drag(event)">
                                     <div class="row">
                                         <div class="col-md-9">
-                                            <%# Eval("FirstName") + " " + Eval("LastName") %>
+                                            <%# Eval("FirstName") + " " + Eval("LastName") %><br />
+                                            <asp:Label ID="LanguagesLabel" runat="server"></asp:Label>
                                         </div>
                                         <div class="col-md-3">
                                             <asp:LinkButton ID="RemoveLinkButton" runat="server" CssClass="btn btn-danger btn-xs"><span class="fa fa-remove"></span></asp:LinkButton>

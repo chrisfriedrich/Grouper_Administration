@@ -131,5 +131,52 @@ namespace GroupBuilderAdmin
             GroupsRepeater_BindRepeater();
         }
 
+        protected void StudentsGridView_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if(e.Row.RowType == DataControlRowType.DataRow)
+            {
+                int studentID = Convert.ToInt32(StudentsGridView.DataKeys[e.Row.RowIndex].Values[0]);
+
+                Student student = GrouperMethods.GetStudent(studentID);
+
+                
+                Label languagesLabel = (Label)e.Row.FindControl("LanguagesLabel");
+
+                string languages = "";
+
+                foreach(ProgrammingLanguage language in student.Languages.OrderBy(x => x.ProficiencyLevel))
+                {
+                    switch (language.Name)
+                    {
+                        case "Java":
+                            languages += "<span class='fa fa-coffee'></span>";
+                            break;
+                        case "Python":
+                            languages += "<span class='fa fa-python'></span>";
+                            break;
+                        case "Android":
+                            languages += "<span class='fa fa-android'></span>";
+                            break;
+                        case "Web Programming (PHP)":
+                            languages += "<span class='fa fa-php'></span>";
+                            break;
+                        case "Web Design (HTML/XML)":
+                            languages += "<span class='fa fa-html5'></span>";
+                            break;
+                        case "C++":
+                            languages += "<span style='font-size: small; font-weight: bold; margin-left: 3px; margin-right: 3px;'>C++</span>";
+                            //languages += @"<span class='fa-layers fa-fw'>
+                            //                <i class='fas fa-circle-o'></i>
+                            //                <span class='fa-layers-text fa-inverse' data-fa-transform='shrink-8 down-3' style='font-weight:900'>C++</span>
+                            //                      </span>";
+                            break;
+                        case "C":
+                            languages += "<span style='font-size: small; font-weight: bold; margin-left: 3px; margin-right: 3px;'>C</span>";
+                            break;
+                    }
+                }
+                languagesLabel.Text = languages;
+            }
+        }
     }
 }

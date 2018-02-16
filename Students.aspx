@@ -116,19 +116,25 @@
     </asp:Panel>
                 <asp:Panel ID="AddStudentPanel" runat="server" CssClass="panel panel-default" Visible="false">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="form-group">
                 <asp:Label ID="DuckIDLabel" CssClass="control-label" runat="server">DuckID: </asp:Label>
                 <asp:TextBox ID="DuckIDTextBox" runat="server" CssClass="form-control"></asp:TextBox>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="form-group">
                 <asp:Label ID="FirstNameLabel" CssClass="control-label" runat="server">First Name: </asp:Label>
                 <asp:TextBox ID="FirstNameTextBox" runat="server" CssClass="form-control"></asp:TextBox>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
+            <div class="form-group">
+                <asp:Label ID="PreferredNameLabel" CssClass="control-label" runat="server">Preferred: </asp:Label>
+                <asp:TextBox ID="PreferredNameTextBox" runat="server" CssClass="form-control"></asp:TextBox>
+            </div>
+        </div>
+        <div class="col-md-3">
             <div class="form-group">
                 <asp:Label ID="LastNameLabel" CssClass="control-label" runat="server">Last Name: </asp:Label>
                 <asp:TextBox ID="LastNameTextBox" runat="server" CssClass="form-control"></asp:TextBox>

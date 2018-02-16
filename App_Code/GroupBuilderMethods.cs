@@ -291,7 +291,6 @@ namespace GroupBuilder
             return instructor;
         }
 
-
         public static void UpdateInstructor(Instructor instructor)
         {
 
@@ -384,9 +383,78 @@ namespace GroupBuilder
 
             return language;
         }
+
+        public static List<ProgrammingLanguage> GetStudentLanguages(int studentID)
+        {
+            List<ProgrammingLanguage> languages = new List<ProgrammingLanguage>();
+
+            SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
+            SqlCommand cmd = new SqlCommand(@"SELECT pl.*, spl.ProficiencyRank FROM Students_ProgrammingLanguages spl JOIN ProgrammingLanguages pl ON spl.LanguageID = pl.LanguageID WHERE spl.StudentID = @StudentID ORDER BY pl.Name;", con);
+            cmd.Parameters.AddWithValue("@StudentID", studentID);
+            con.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                ProgrammingLanguage language = new ProgrammingLanguage();
+
+                language.LanguageID = GetSafeInteger(reader, "LanguageID");
+                language.Name = GetSafeString(reader, "Name");
+                language.ProficiencyLevel = GetSafeInteger(reader, "ProficiencyRank");
+
+                languages.Add(language);
+
+            }
+            con.Close();
+
+            return languages;
+        }
+
+        public static void DeleteStudentLanguages(int studentID)
+        {
+            SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
+            SqlCommand cmd = new SqlCommand(@"DELETE FROM Students_ProgrammingLanguages WHERE StudentID = @StudentID;", con);
+            cmd.Parameters.AddWithValue("@StudentID", studentID);
+            con.Open();
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
+
+        public static void InsertStudentLanguage(int studentID, int languageID, int proficiencyLevel)
+        {
+
+            SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
+            con.Open();
+            SqlCommand cmd = new SqlCommand(
+                @"SELECT *  FROM Students_ProgrammingLanguages  
+                WHERE StudentID = @StudentID 
+                AND LanguageID = @LanguageID;", con);
+            cmd.Parameters.AddWithValue("@StudentID", studentID);
+            cmd.Parameters.AddWithValue("@LanguageID", languageID);
+
+            var exists = cmd.ExecuteScalar();
+            con.Close();
+            if (exists == null)
+            {
+                cmd = new SqlCommand(
+                @"INSERT INTO Students_ProgrammingLanguages 
+                    (StudentID, LanguageID, ProficiencyRank) 
+                    VALUES 
+                    (@StudentID, @LanguageID, @ProficiencyRank);
+                    SELECT SCOPE_IDENTITY();", con);
+                cmd.Parameters.AddWithValue("@StudentID", studentID);
+                cmd.Parameters.AddWithValue("@LanguageID", languageID);
+                cmd.Parameters.AddWithValue("@ProficiencyRank", proficiencyLevel);
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+        }
+
         #endregion
 
         #region Roles 
+
         public static List<Role> GetRoles()
         {
             List<Role> roles = new List<Role>();
@@ -506,9 +574,20 @@ namespace GroupBuilder
             con.Close();
         }
 
+        public static void DeleteStudentRoleInterests(int studentID)
+        {
+            SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
+            SqlCommand cmd = new SqlCommand(@"DELETE FROM Students_RoleInterests WHERE StudentID = @StudentID;", con);
+            cmd.Parameters.AddWithValue("@StudentID", studentID);
+            con.Open();
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
+
         #endregion
 
         #region Skills 
+
         public static List<Skill> GetSkills()
         {
             List<Skill> skills = new List<Skill>();
@@ -628,6 +707,16 @@ namespace GroupBuilder
             con.Close();
         }
 
+        public static void DeleteStudentSkills(int studentID)
+        {
+            SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
+            SqlCommand cmd = new SqlCommand(@"DELETE FROM Students_Skills WHERE StudentID = @StudentID;", con);
+            cmd.Parameters.AddWithValue("@StudentID", studentID);
+            con.Open();
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
+
         #endregion
 
         #region Courses
@@ -723,7 +812,6 @@ namespace GroupBuilder
 
         public static void UpdateCourse(Course course)
         {
-
             SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
             SqlCommand cmd = new SqlCommand(
                 @"UPDATE Courses 
@@ -753,7 +841,6 @@ namespace GroupBuilder
             cmd.ExecuteNonQuery();
             con.Close();
         }
-
 
         #endregion
 
@@ -805,38 +892,6 @@ namespace GroupBuilder
             return studentID;
         }
 
-        public static void InsertStudentLanguage(int studentID, int languageID, int proficiencyLevel)
-        {
-
-            SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
-            con.Open();
-            SqlCommand cmd = new SqlCommand(
-                @"SELECT *  FROM Students_ProgrammingLanguages  
-                WHERE StudentID = @StudentID 
-                AND LanguageID = @LanguageID;", con);
-            cmd.Parameters.AddWithValue("@StudentID", studentID);
-            cmd.Parameters.AddWithValue("@LanguageID", languageID);
-
-            var exists = cmd.ExecuteScalar();
-            con.Close();
-            if (exists == null)
-            {
-                cmd = new SqlCommand(
-                @"INSERT INTO Students_ProgrammingLanguages 
-                    (StudentID, LanguageID, ProficiencyRank) 
-                    VALUES 
-                    (@StudentID, @LanguageID, @ProficiencyRank);
-                    SELECT SCOPE_IDENTITY();", con);
-                cmd.Parameters.AddWithValue("@StudentID", studentID);
-                cmd.Parameters.AddWithValue("@LanguageID", languageID);
-                cmd.Parameters.AddWithValue("@ProficiencyRank", proficiencyLevel);
-
-                con.Open();
-                cmd.ExecuteNonQuery();
-                con.Close();
-            }
-        }
-
         public static Student GetStudent(int studentID)
         {
             Student student = null;
@@ -871,61 +926,6 @@ namespace GroupBuilder
                 student.Skills = GetStudentSkillInterests(student.StudentID);
             }
             return student;
-        }
-
-        public static List<ProgrammingLanguage> GetStudentLanguages(int studentID)
-        {
-            List<ProgrammingLanguage> languages = new List<ProgrammingLanguage>();
-
-            SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
-            SqlCommand cmd = new SqlCommand(@"SELECT pl.*, spl.ProficiencyRank FROM Students_ProgrammingLanguages spl JOIN ProgrammingLanguages pl ON spl.LanguageID = pl.LanguageID WHERE spl.StudentID = @StudentID ORDER BY pl.Name;", con);
-            cmd.Parameters.AddWithValue("@StudentID", studentID);
-            con.Open();
-            SqlDataReader reader = cmd.ExecuteReader();
-            while (reader.Read())
-            {
-                ProgrammingLanguage language = new ProgrammingLanguage();
-
-                language.LanguageID = GetSafeInteger(reader, "LanguageID");
-                language.Name = GetSafeString(reader, "Name");
-                language.ProficiencyLevel = GetSafeInteger(reader, "ProficiencyRank");
-
-                languages.Add(language);
-
-            }
-            con.Close();
-
-            return languages;
-        }
-
-        public static void DeleteStudentLanguages(int studentID)
-        {
-            SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
-            SqlCommand cmd = new SqlCommand(@"DELETE FROM Students_ProgrammingLanguages WHERE StudentID = @StudentID;", con);
-            cmd.Parameters.AddWithValue("@StudentID", studentID);
-            con.Open();
-            cmd.ExecuteNonQuery();
-            con.Close();
-        }
-
-        public static void DeleteStudentRoleInterests(int studentID)
-        {
-            SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
-            SqlCommand cmd = new SqlCommand(@"DELETE FROM Students_RoleInterests WHERE StudentID = @StudentID;", con);
-            cmd.Parameters.AddWithValue("@StudentID", studentID);
-            con.Open();
-            cmd.ExecuteNonQuery();
-            con.Close();
-        }
-
-        public static void DeleteStudentSkills(int studentID)
-        {
-            SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
-            SqlCommand cmd = new SqlCommand(@"DELETE FROM Students_Skills WHERE StudentID = @StudentID;", con);
-            cmd.Parameters.AddWithValue("@StudentID", studentID);
-            con.Open();
-            cmd.ExecuteNonQuery();
-            con.Close();
         }
 
         public static List<Student> GetStudents()
@@ -1036,6 +1036,7 @@ namespace GroupBuilder
             cmd.ExecuteNonQuery();
             con.Close();
         }
+
         #endregion
 
         #region Instructor Courses
@@ -1177,6 +1178,32 @@ namespace GroupBuilder
             cmd.ExecuteNonQuery();
             con.Close();
         }
+
+        public InstructorCourse GetCurrentInstructorCourse(int instructorID)
+        {
+            InstructorCourse course = null;
+            int courseSectionID = 0;
+
+            SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
+            SqlCommand cmd = new SqlCommand(@"SELECT * FROM Instructors_CourseSections WHERE InstructorID = @InstructorID 
+                                                AND CurrentInstructorCourseFlag = 'True';", con);
+            cmd.Parameters.AddWithValue("@InstructorID", instructorID);
+            con.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                courseSectionID = GetSafeInteger(reader, "CourseSectionID");
+            }
+            con.Close();
+
+            if (courseSectionID > 0)
+            {
+                course = GrouperMethods.GetInstructorCourse(courseSectionID);
+            }
+
+            return course;
+        }
+
         #endregion
 
         #region Groups
@@ -1287,31 +1314,6 @@ namespace GroupBuilder
             return groups;
         }
 
-        public InstructorCourse GetCurrentInstructorCourse(int instructorID)
-        {
-            InstructorCourse course = null;
-            int courseSectionID = 0;
-
-            SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
-            SqlCommand cmd = new SqlCommand(@"SELECT * FROM Instructors_CourseSections WHERE InstructorID = @InstructorID 
-                                                AND CurrentInstructorCourseFlag = 'True';", con);
-            cmd.Parameters.AddWithValue("@InstructorID", instructorID);
-            con.Open();
-            SqlDataReader reader = cmd.ExecuteReader();
-            while (reader.Read())
-            {
-                courseSectionID = GetSafeInteger(reader, "CourseSectionID");
-            }
-            con.Close();
-
-            if(courseSectionID > 0)
-            {
-                course = GrouperMethods.GetInstructorCourse(courseSectionID);
-            }
-
-            return course;
-        }
-
         public static int InsertGroupMember(int groupID, int studentID)
         {
             SqlConnection con = new SqlConnection(GrouperConnectionString.ConnectionString);
@@ -1385,6 +1387,7 @@ namespace GroupBuilder
             }
             return students;
         }
+
         #endregion
 
     }
